@@ -1,0 +1,15 @@
+<!DOCTYPE html><meta charset="utf-8"><style> .link {  stroke: #000;  stroke-width: 1.5px;} .node {  cursor: move;  fill: #ccc;  stroke: #000;  stroke-width: 1.5px;}
+.node.fixed {  fill: #f00;}</style><body><script src="https://d3js.org/d3.v3.min.js"></script><script> var width = 2120, height = 1580;var force = d3.layout.force()
+.size([width, height])    .charge(-400)    .linkDistance(40)    .on("tick", tick);var drag = force.drag()    .on("dragstart", dragstart);var svg = d3.select("body").append("svg")
+    .attr("width", width)    .attr("height", height);var link = svg.selectAll(".link"),    node = svg.selectAll(".node");
+
+    graph = {"directed": false, "graph": {}, "nodes": [{"pos": [0.01978087115564616, 1.0], "name": "activate", "id": 0}, {"pos": [-0.8773458682542565, -0.48531722442165426],
+    "name": "rest", "id": 1}, {"pos": [-8.173282202435402e-05, -4.8220458866746584e-05], "name": "service", "id": 2}, {"pos": [0.8576467299206346, -0.5146345551194786],
+     "name": "client", "id": 3}], "links": [{"source": 0, "target": 2}, {"source": 1, "target": 2}, {"source": 2, "target": 3}], "multigraph": false};
+
+     force  .nodes(graph.nodes)
+      .links(graph.links)  .start();link = link.data(graph.links).enter().append("line")  .attr("class", "link"); node1 = node.data(graph.nodes).enter().append("circle")
+      .attr("class", "node")  .attr("r", 8)  .on("dblclick", dblclick)  .call(drag);node2 = node.data(graph.nodes).enter().append("text")  .attr("class", "node")
+      .attr("dx", function(d) { return d.x })  .attr("dy", function(d) { return d.y })  .html(function(d) { return d.name });
+
+      function tick() {  link.attr("x1", function(d) { return d.source.x; })      .attr("y1", function(d) { return d.source.y; })      .attr("x2", function(d) { return d.target.x; })      .attr("y2", function(d) { return d.target.y; });  node1.attr("cx", function(d) { return d.x; })      .attr("cy", function(d) { return d.y; });  node2.attr("dx", function(d) { return d.x+15; })      .attr("dy", function(d) { return d.y; });}function dblclick(d) {  d3.select(this).classed("fixed", d.fixed = false);}function dragstart(d) {  d3.select(this).classed("fixed", d.fixed = true);}</script>

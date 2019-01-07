@@ -1,0 +1,13 @@
+plotly
+networkx
+Flask
+pandas
+numpy
+scipy
+matplotlib
+gensim
+flask_cors
+nltk
+flasgger
+seaborn
+wikipedia

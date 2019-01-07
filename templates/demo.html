@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <!-- Theme Made By www.w3schools.com - No Copyright -->
+  <title>OpenReq Demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  body {
+      font: 400 15px/1.8 Lato, sans-serif;
+      color: #777;
+  }
+  h3, h4 {
+      margin: 10px 0 30px 0;
+      letter-spacing: 10px;
+      font-size: 20px;
+      color: #111;
+  }
+  .container {
+      padding: 80px 120px;
+  }
+  .person {
+      border: 10px solid transparent;
+      margin-bottom: 25px;
+      width: 80%;
+      height: 80%;
+      opacity: 0.7;
+  }
+  .person:hover {
+      border-color: #f1f1f1;
+  }
+  .carousel-inner img {
+      /*-webkit-filter: grayscale(90%);*/
+      /*filter: grayscale(90%);*/ /* make all photos black and white */
+      width: 60%; /* Set width to 100% */
+      margin: auto;
+  }
+  .carousel-caption h3 {
+      color: #fff !important;
+  }
+  p {
+    text-align: center;
+  }
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none; /* Hide the carousel text when the screen is less than 600 pixels wide */
+    }
+  }
+  .bg-1 {
+      background: #2d2d30;
+      color: #bdbdbd;
+  }
+  .bg-1 h3 {color: #fff;}
+  .bg-1 p {font-style: italic;}
+  .list-group-item:first-child {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+  }
+  .list-group-item:last-child {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+  }
+  .thumbnail {
+      padding: 0 0 15px 0;
+      border: none;
+      border-radius: 0;
+  }
+  .thumbnail p {
+      margin-top: 15px;
+      color: #555;
+  }
+  .btn {
+      padding: 10px 20px;
+      background-color: #333;
+      color: #f1f1f1;
+      border-radius: 0;
+      transition: .2s;
+  }
+  .btn:hover, .btn:focus {
+      border: 1px solid #333;
+      background-color: #fff;
+      color: #000;
+  }
+  .modal-header, h4, .close {
+      background-color: #333;
+      color: #fff !important;
+      text-align: center;
+      font-size: 30px;
+  }
+  .modal-header, .modal-body {
+      padding: 40px 50px;
+  }
+  .nav-tabs li a {
+      color: #777;
+  }
+  #googleMap {
+      width: 100%;
+      height: 400px;
+      -webkit-filter: grayscale(100%);
+      filter: grayscale(100%);
+  }
+  .navbar {
+      font-family: Montserrat, sans-serif;
+      margin-bottom: 0;
+      background-color: #2d2d30;
+      border: 0;
+      font-size: 11px !important;
+      letter-spacing: 4px;
+      opacity: 0.9;
+  }
+  .navbar li a, .navbar .navbar-brand {
+      color: #d5d5d5 !important;
+  }
+  .navbar-brand {
+      font-size: 40px;
+  }
+  .navbar-nav li a:hover {
+      color: #fff !important;
+  }
+  .navbar-nav li.active a {
+      color: #fff !important;
+      background-color: #29292c !important;
+  }
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+  }
+  .open .dropdown-toggle {
+      color: #fff;
+      background-color: #555 !important;
+  }
+  .dropdown-menu li a {
+      color: #000 !important;
+  }
+  .dropdown-menu li a:hover {
+      background-color: red !important;
+  }
+  footer {
+      background-color: #2d2d30;
+      color: #f5f5f5;
+      padding: 32px;
+  }
+  footer a {
+      color: #f5f5f5;
+  }
+  footer a:hover {
+      color: #777;
+      text-decoration: none;
+  }
+  .form-control {
+      border-radius: 0;
+  }
+  textarea {
+      resize: none;
+  }
+  </style>
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="50" onLoad="buildHtmlTable('excelDataTable')">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#myPage">OpenReq</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#myPage">TWEETS</a></li>
+        <li><a href="#carousel">SOM</a></li>
+        <li><a href="#clustering">FREQUENCIES</a></li>
+        <li><a href="#mst">MST</a></li>
+        <!--<li class="dropdown">-->
+          <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#">MORE-->
+          <!--<span class="caret"></span></a>-->
+          <!--<ul class="dropdown-menu">-->
+            <!--<li><a href="#">Merchandise</a></li>-->
+            <!--<li><a href="#">Extras</a></li>-->
+            <!--<li><a href="#">Media</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>-->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="tweets" class="bg-1">
+<script>
+  var myList = [
+    {"messaggio":"Posso essere chiamato da un operatore 3"},
+      {"messaggio":"@Tre_It grazie al #3store di #Arona per il supporto durante il #blackout. Unici ad avere notizie certe. call center da bocciare"},
+      {"messaggio":"@Tre_It da un paio di settimane nella metro A di Roma, nonostante ci sia copertura, internet non funziona o, se funziona, è lentissimo."},
+      {"messaggio":"@Tre_It strani addebiti da €0,41"},
+      {"messaggio":"@Tre_It problema con All-In One: dovrebbe consentire chiamate + sms illimitati verso tutti, ma mi sono stati addebitati sms #SocialCare3"},
+      {"messaggio":"#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /nqGm5YEngO https: / /t.co /ha92eLPXGp"},
+      {"messaggio":"@Tre_It è due ore che cerco di parlare con un operatore nma come si fa?"},
+      {"messaggio":"@tre_it ecco tutte le info non ho mai fatto questa chiamata, perche’ me la avete addebitata? https: / /t.co /Wi3dxAtd6j"},
+      {"messaggio":"Avete un servizio clienti pessimo! @Tre_It"},
+      {"messaggio":"@Tre_Assistenza @Tre_It sarebbe bastato così poco!"},
+      {"messaggio":"@Tre_Assistenza @Tre_It ormai perdo ogni speranza nel vostro customer care dp oltre 1 settimana di la tua pratica è stata preso in carico "},
+      {"messaggio":"@Tre_It ma per avere la Card Gold non basta avere un abbonamento All - In 800? #socialcare3 #cardCinema3 #cinema3"},
+      {"messaggio":"@Tre_Assistenza @Tre_It Bloccher  il pagamento,nel caso fosse emessa con addebiti non dovuti.Non pago io prima per ricevere rimborso poi."},
+      {"messaggio":"@Tre_It Assenza segnale, specie a Casale sul Sile. Riuscite a risolvere in breve tempo? Altrimenti, sono costretta a cambiare operatore."},
+      {"messaggio":"@Tre_Assistenza @Tre_It in fase di cosa?Sono 5 giorni che ho addebiti.Anche stanotte.Quanto dura questa fase?"},
+      {"messaggio":"@Tre_It non riconosce la mia mail"},
+      {"messaggio":"@Tre_Assistenza @Tre_It I dovuti interventi?Faccine che ridono?E' dal primo marzo che ho addebiti e non è escluso che vadano cmq in fattura."},
+      {"messaggio":"Rendo questo mondo stupendo soltanto esistendo #sono3mendo https: / /t.co /VGvwNEMeiB @Tre_It https: / /t.co /hgHgMFPMqS https: / /t.co /NvpgoyswjI"},
+      {"messaggio":"@bagnidalmondo @Tre_It @Tre_Assistenza ciao novità? io anche stanotte altri addebiti"},
+      {"messaggio":"Con tutte le ragazze #sono3mendo @Tre_It festeggia con lui 13 anni! E tu perché sei 3mendo?? https: / /t.co /EJf7NGURd0 https: / /t.co /8ssPHIanEN"},
+      {"messaggio":"@Tre_It salve, ma voi non aderite all'iniziativa di regalare internet gratis per la festa della donna come fanno gli altri gestori??"},
+      {"messaggio":"@Tre_It ho mandato i miei dati in dm"},
+      {"messaggio":"@Tre_It salve mi è arrivato un SMS con la proposta promo 100 giga. 2.5 giga a settimana per tutto il 2016 29€ una tantum. Come l'attivo? Grz"},
+      {"messaggio":"@Tre_It @Tre_Assistenza Grazie lo far .  :)"},
+      {"messaggio":"@Tre_It Buongiorno a chi posso chiedere per un informazione sulla mia opzione attiva?"},
+      {"messaggio":"Lui si che sa fare il moonwalk! #sono3mendo @Tre_It https: / /t.co /UezQoyJqHh https: / /t.co /gG9EtcoqpX"},
+      {"messaggio":"#FollowFriday @Tre_It @GiuliaCortese1 top Influencers this week! Have a great weekend :) (Want this FREE? &gt;&gt; https: / /t.co /2VNpGxwoNW)"},
+      {"messaggio":"@Tre_Assistenza @Tre_It Io in Italia con voi sto benissimo ma le tariffe all'estero sono scandalose specialmente quelle Internet"},
+      {"messaggio":"We're combining w / @Ericsson to meet @Tre_It’s data traffic demands & pave way for #5G: https: / /t.co /8p2CX6WGwN via @CiscoSPMobility"},
+      {"messaggio":"@Tre_It ho fatto l'upgrade del piano (MyBusiness) . Come faccio l'upgrade della card Grande Cinema 3 (Gold) ?"},
+      {"messaggio":"@Tre_It domani cambio gestore telefonico, mi avete succhiato nove euro in pi  in un mese e non è possibile parlare con un operatore al 133"},
+      {"messaggio":"@Tre_It un informazione ma come faccio a vedere il traffico residuo del mio webpocket? grazie"},
+      {"messaggio":"@Tre_It MAMMA NON TEMERE #Sono3Mendo TUTTE LE SERE https: / /t.co /zjIZn3UTWq"},
+      {"messaggio":"@Tre_It salve sono giorni che ricevo incessantemente addebiti di 0.41cent Spese di attivazione dicitura CU UMTS  https: / /t.co /14XrlDKvUQ"},
+      {"messaggio":"@Tre_It ok grazie!"},
+      {"messaggio":"@matteograndi @Tre_It in realtà aspettano gli altri due..."},
+      {"messaggio":"@Tre_It ciao ma avete già attivato il 4G plus?"},
+      {"messaggio":"#MeteoScatto dalla Tonnara di #Palmi, #Ulivarella. #MareLive per @3BMeteo, saluti anche a @Tre_It. #Calabria �� https: / /t.co /lS3ngs6G"},
+      {"messaggio":"Safro at work! Spot della 3! #set #roma #facceda3 #vitacon3 #free3 #gianmarcotognazzi @Tre_it"},
+      {"messaggio":"Safro at work !! Spot Della 3 ! #set #facceda3 # free3 #vitacon3 @Tre_it"},
+      {"messaggio":"@Tre_It #sono3mendo  nhttps: / /t.co /ceCCOGG1KZ"},
+      {"messaggio":"@LG_Italia @LioHarris ma è quasi pronto anche per quelli con brand @Tre_It???"},
+      {"messaggio":"#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /sevOF0Hgaq https: / /t.co /IC126qxJxD"},
+      {"messaggio":"@Tre_It chissà cosa fa nel weekend il nostro amico vedrà c'è posta per te o uscirà  a fare baldoria? #sono3mendo  nhttps: / /t.co /2wJ779fsbY"},
+      {"messaggio":"@matteograndi @Tre_It opterei per una forma precoce di Alzheimer"},
+      {"messaggio":"@Tre_It sono un cliente tim vorrei passare a 3 con l'offerta che ha anche mio fratello 5 euro al mese giga chiamate ecc come devo fare?"},
+      {"messaggio":"@CiaoSonoLino io fino a ieri avevo  @Tre_It anche per voce, ma le sogli settimanali mi stavano strette"},
+      {"messaggio":"@speriamobene1 se la @Tre_It includesse 1 gb al mese per il roaming cambierei subito operatore"},
+      {"messaggio":"@CiaoSonoLino @Tre_It no, cone tutti gli operatori il roaming non è incluso. Io vivendo e lavorando a Roma non sono mai andato in roaming"},
+      {"messaggio":"@speriamobene1 pero vale solo sotto rete @Tre_It vero? Quando si aggancia alle altre sono senza internet?"},
+      {"messaggio":"@BonadonnaMarco @Tre_Assistenza @Tre_It Ancora niente..."},
+      {"messaggio":"@matteograndi @Tre_It ma certo che dobbiamo fare chiamiamo questo numero? https: / /t.co /9fHltPvCWE"},
+      {"messaggio":"@matteograndi @Tre_It e vabbè ma se tu per info  non rispondi te le cerchi .."},
+      {"messaggio":"@Tre_Assistenza @Tre_It Continuo a ricevere sms con scritto  accedi a 3Social, abbiamo risposto  ma non c'è nessuna risposta sul profilo!"},
+      {"messaggio":"@matteograndi @Tre_It probabilmente già sta con un altro #ex"},
+      {"messaggio":"@matteograndi mi dispiace molto, @Tre_It è una poverata. Soffro per te. Mi dispero per te. Prego per te."},
+      {"messaggio":"@Tre_It non riesco a disabilitare la fun.ti ho chiamato di 3, mi da sempre network error anche sotto rete 3,ed ho pagato già 90 cen.grazie"},
+      {"messaggio":"@Tre_Assistenza @Tre_It Manca: cessione SIM da privato a SRL (di cui la stessa persona fisica è ammin.) con modifica abbonamento. Si pu ?"},
+      {"messaggio":"@Tre_It Sono cliente business e vivo all'estero.C'è modo di parlare con un operatore?Non datemi gli stessi numeri di tel in quanto inutili"},
+      {"messaggio":"@Tre_Assistenza è possibile intestare un contratto (attualmente) privato ad un'azienda di cui sono amministratrice? n@Tre_It"},
+      {"messaggio":"@Tre_It buongiorno, ho attivato la vs. Sim da un paio di giorni, voglio DISATTIVARE il servizio  Ti Ho Cercato  . come devo fare ?"},
+      {"messaggio":"@Tre_Assistenza @Tre_It Si, vi prego.  nDopo 8 anni con voi mi scoccerebbe cambiare :-("},
+      {"messaggio":"@BonadonnaMarco @Tre_It @Tre_Assistenza io sto aspettando. Max entro oggi, altrimenti chiudo contratti personali e aziendali per sempre."},
+      {"messaggio":"@bagnidalmondo @Tre_It fantastico...@Tre_Assistenza mi hanno chiamato a tel, mi hanno detto che è in via di risoluzione..."},
+      {"messaggio":"@BonadonnaMarco @Tre_It Come non detto!!! Appena controllato, addebiti come i tuoi e ieri non era extrasoglia!! https: / /t.co /RoC5Q5Py4i"},
+      {"messaggio":"@MicK_ele Anche TIM mi ha sempre rimborsato, in varie occasioni. Non ci sono operatori migliori  n@ciaodom @Tre_It @Tre_Assistenza"},
+      {"messaggio":"@Tre_Assistenza @Omiminpo ciao hai avuto riscontro? A me hanno addebitato 54 euro dal 1 Marzo, e naturalmente ancora nulla @Tre_It"},
+      {"messaggio":"@Tre_It ROMA NON FUNZIONA INTERNET MOBILE IN ZONA VIALE EUROPA..."},
+      {"messaggio":"@Pipp61479281 @ciaodom Problema risolto e soldi restituiti. Ve l'avevo detto che 3 è l'operatore migliore :-)  @Tre_It @Tre_Assistenza"},
+      {"messaggio":"@Tre_Assistenza @Tre_It questa risposta va avanti da una settimana"},
+      {"messaggio":"@Tre_It @Tre_Assistenza cosa altro dovrei fare?"},
+      {"messaggio":"@Tre_It @Tre_Assistenza possibile che non vengo degnato di assistenza???Ormai è passata pi  di una settimana ma ancora nulla!"},
+      {"messaggio":"@bagnidalmondo @Tre_It si anche io..ho già contattato Alternatyva (per la zona di roma) (tariffa mobile, infinito su sim wind a 22 euro /mese"},
+      {"messaggio":"@BonadonnaMarco @Tre_It problema differente. Ma se non risolvo entro oggi stacco il RID e cambio operatore. Basta."},
+      {"messaggio":"@Garolfo consolati non penso @TIM_Official sia peggio di @Tre_It"},
+      {"messaggio":"Auguri (in ritardo) @Tre_It "},
+      {"messaggio":".@TIM4UGiulia 24 ore senza alcuna risposta? @TIM_Official mai successo in precedenza con @Tre_It e @VodafoneIT! Sono seriamente!"},
+      {"messaggio":"Tra l'altro, non leggendo sms nella sim dentro un cubo... Me ne sono accorto perchè ho pagato 5€ di modifica, sapete cosa fa @Tre_It?"},
+      {"messaggio":"Avvisato con un sms delle modifiche di un contratto, va bene un tweet per la disdetta? @Tre_It"},
+      {"messaggio":"@bagnidalmondo @Tre_It a me tutti addebiti di 0,41 euro con dicitura CU UMTS. Mi hanno preso 50 euro fin'ora...non mi hanno ricontattato."},
+      {"messaggio":"@BonadonnaMarco @Tre_It ho seguito la voce, non ricordo! Ma domani devo riprovare, non sono stata richiamata come promesso �"},
+      {"messaggio":"@Tre_It @bagnidalmondo ps. puoi dirmi i numeri per parlare con un operatore chiamando il 133? E' imbarazzante come impediscano di parlare"},
+      {"messaggio":"@Tre_It @bagnidalmondo ciao, hai ancora il problema degli addebiti? Ti hanno fatto sapere qualcosa? Stesso problema."},
+      {"messaggio":"@Tre_It Da 3 giorni vengono addebitati costi extrasoglia ingiustificati. Ancora attendo risposta.Domani blocco carta e passo ad alternatyva."},
+      {"messaggio":"@Tre_It le vostre promozioni per chi passa a 3? Grazie"},
+      {"messaggio":"#adamscandinaviatour  @cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #Stockholm  "},
+      {"messaggio":"@Tre_It Salve, ho un problema: devo avere attivato un abbonamento, anche se non so come... Mondo Giochi Mobile Pay, come lo disattivo?"},
+      {"messaggio":"@Tre_It https: / /t.co /ilYKeNVSCe"},
+      {"messaggio":"Un altro addio ad @Tre_It ...passato con @WindItalia in 24 ore....costo mese 6 euro con #tre almeno 15+IVA+ costo sim"},
+      {"messaggio":"@Tre_It beh... A quanto dicono gli operatori non potevate anticipare il cambio di contratto per un cliente da 7 /8 anni oltre ad altri disagi"},
+      {"messaggio":"@Tre_It Sono interessato all'abbonamento Full 400. I 4GB di Internet sono mensili o vengono suddivisi settimanalmente?"},
+      {"messaggio":"@Tre_It Sono interessato all'abbonamento solo sim Super Internet Plus. Che piano tariffario è compreso per le chiamate e gli sms?"},
+      {"messaggio":"@Tre_It Provincia di Trento, Altopiano della Vigolana, segnale telefonico quasi assente, connessione dati zero, il tutto da domenica..."},
+      {"messaggio":"Ti chiama la @Tre_It per questionario di soddisfazione sul servizio e cade la linea... Si sono risposti da soli! :) #tre"},
+      {"messaggio":"@Tre_It  salve volevo sapere come mai nella metro M5 di Milano non c'è copertura di rete 3 e il telefono mi prende Tim? Sono passati 2 anni"},
+      {"messaggio":"@Tre_It io attendo. Ma alle 9 mi avevano assicurato una telefonata di riscontro entro la mattina e ancora nulla."},
+      {"messaggio":"@Tre_It fatto"},
+      {"messaggio":"@Tre_It grazie"},
+      {"messaggio":"@cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #OSLO #AdamScandinaviaTour CHOOSE me"},
+      {"messaggio":"Vorrei tornare a @VodafoneIT o @TIM_Official ma nessuno dei due offre di meglio del piano attuale con @Tre_It #concorrenza"},
+      {"messaggio":"@GBuongiglio @Tre_It pensa che l'ultima settimana di ogni messe nn mi rinnovano i minuti perché mi rubano pochi centesimi... #maipiúh3g"},
+      {"messaggio":"@Tre_It ho appena preso un pocket cube con offerta web night&day ma ho problemi"},
+      {"messaggio":"@ehiluigi @Tre_It donate una ricarica a questo ragazzo, lo renderete felice, con un lavoro stabile per mantenere la famiglia e mangiare (?)"},
+      {"messaggio":"@Tre_It  Mi disattivate la promozione e magari pretendete anche che io ne attivi una nuova pagando il costo d'attivazione. Cose da pazzi"},
+      {"messaggio":"@Tre_It HO FATTO DUE RICARICHE E NON ME NE È ARRIVATA NEMMENO UNAAAAA n nMA COMEEEE"},
+      {"messaggio":"Sono nervoso @Tre_It"},
+      {"messaggio":"@stammeceaccort @CittadiSalerno @LIRATV @mattinodinapoli @Tre_It #tre non funziona bene nelle zone di Salerno e Battipaglia"},
+      {"messaggio":"@Tre_Assistenza @Tre_It è vergognoso far pagare recesso anticipato per passaggio ad altro gestore @LIRATV @stammeceaccort"},
+      {"messaggio":"@Tre_It @stammeceaccort @LIRATV @CittadiSalerno @portale_offerte questa è la tre pagare recesso anticipato https: / /t.co /OuFUZkb3YW"},
+      {"messaggio":"@Tre_It Gentile 3, pu  rispondere direttamente nella inbox della app alla richiesta inviata il 05 /03 /2016. O facciamo i girotondi. Grazie ya"},
+      {"messaggio":"@Tre_It perché sono 3 giorni che il mio iPad non riceve internet con piano dati Tre? Perennemente Tim (=no internet). Risolvere grazie!"},
+      {"messaggio":"@Tre_It Volevo ringraziare x il rimborso. Se ci fosse +controllo su truffe abbonamenti sarebbe meglio.Bravi comunque https: / /t.co /2WlYWBYTkN"},
+      {"messaggio":"@Tre_It Sareste gentili da spiegarmi 3EasyPass? In Irlanda, potrei usare i miei gb senza alcun ulteriore costo (sotto rete 3 ovvio)? grazie!"},
+      {"messaggio":"@Tre_It sono stata contattata da un vostro operatore ke non capendo la mia problematica ha pensato di richiudere la telefonata!complimenti!"},
+      {"messaggio":"@Tre_It come faccio a parlare con un operatore al pi  presto? Chiamando il 133 nessuno mi risponde"},
+      {"messaggio":"È appena nato e si sentirà parlare di lui ovunque: è #sono3mendo di @Tre_It. Ecco cos'è: https: / /t.co /0Fz4ZloP96 https: / /t.co /6eWmelph9p"},
+      {"messaggio":"@Tre_It perché non mi attivate la promozione ? Attivata telefonicamente ?"},
+      {"messaggio":"@Tre_It mi è stato addebitato il servizio lovingirls che non volevo, l ho disattivato ma mi avete mangiato i soldi"},
+      {"messaggio":"listino di marzo in casa @Tre_it tra rinnovi e opzioni non pi  attivabili https: / /t.co /YxKaU7ftwj"},
+      {"messaggio":"#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /GSdraSoN55 https: / /t.co /EngJekizJB"},
+      {"messaggio":"ancora nuove esperienze sugli addebiti da 41 ct di @Tre_it https: / /t.co /k78JiLz7Q3"},
+      {"messaggio":"@Tre_It https: / /t.co /K1NXWnWzo1"},
+      {"messaggio":"@Tre_It una volta ogni una settimana ogni martedì di 2.50€."},
+      {"messaggio":"@Tre_It buongiorno allora senta io fino a ieri avevo la bellezza di 111.25€ ora mi avete scallato 5€ e ho 106.25€  x quale motivo se io pago"},
+      {"messaggio":"ho problemi di strani addebiti su mio PocketCube3, pur non avendo mai superato soglia e navigato anche dopo le 24 @Tre_it #buonadomenica"},
+      {"messaggio":"@Tre_It buongiorno ieri ho fatto il rivincolo contratto  ora non va pi  Internet e chiamate è normale? 3400889564"},
+      {"messaggio":"@Tre_It alle 10:01 vi ho inviato un mp. Vorrei passare a 3"},
+      {"messaggio":"@Tre_It da ieri, 5 marzo, zona lago Maggiore senza rete #Tre. Cosa e' successo?"},
+      {"messaggio":"@Tre_It ad #Arona provincia #Novara va solo #Tim. Io uso internet per lavoro. Ci muoviamo a sistemare il problema?"},
+      {"messaggio":"@Tre_It ciao ho un problema con il mio pocket cube 4G quando connetto lo smartphone non mi manda su internet cosa dovrei fare ?"},
+      {"messaggio":"Quanti di voi vorrebbero dire #sono3mendo in buona compagnia davanti al Louvre? https: / /t.co /qK9iPSCcta @Tre_it https: / /t.co /iScCnzLiI9"},
+      {"messaggio":"È appena nato e si sentirà parlare di lui ovunque: è #sono3mendo di @Tre_It. Ecco cos'è: https: / /t.co /0Fz4ZloP96 https: / /t.co /B3u1scPWEC"},
+      {"messaggio":"Velocità di @Tre_It in LTE qui dove abito io..4 tacche https: / /t.co /C48DwG8g6J"},
+      {"messaggio":"@TimeMagazine14 @3Italia ATTENZIONE L'account ufficiale di 3Italia è @Tre_It Grazie"},
+      {"messaggio":"@Tre_Assistenza @Tre_It Niente problema non risolto. #Assistenza #tre pessima. Ci rinuncio, cambiero' #gestore'.Eppure era semplice."},
+      {"messaggio":"@Tre_It Grande rete LTE di 3..... https: / /t.co /Plk4nzBHFW"},
+      {"messaggio":"@Tre_It salve ma esiste un modo umano per parlare con voi a telefono??mi servirebbero delle info per passare a tre"}
+  ];
+
+  // Builds the HTML Table out of myList.
+  function buildHtmlTable(selector) {
+    for (var i = 0; i < myList.length; i++) {
+/*      var newRow = $("<tr>");
+      var cols = "";
+      cols += '<td>'+myList[i]["messaggio"]+'</td>';
+      newRow.append(cols);
+      $("table").append(newRow);*/
+
+      $('#excelDataTable').append('<tr><td>'+myList[i]["messaggio"]+'</td></tr>');
+    }
+   }
+
+</script>
+
+  <div class="container">
+    <h2>Analisi del canale Twitter della Tre per individuare gli argomenti di cui trattano i tweet degli utenti</h2>
+    <br>
+    <p>Il sistema effettua una topic extraction dei tweet rivolti alla 3 sul canale di Twitter. La soluzione consente di​
+      identificare i topic di maggior interesse e comprendere di cosa parlano la grande mole di tweet, permettendo di
+      individuare eventuali disagi, malfunzionamenti​ e malcontenti o proposte di nuove feature
+      da parte della clientela.</p>
+    <br>
+    <h3>Tweets (campione di esempio)</h3>
+    <div class="pre-scrollable" style="height: 500px;">
+      <table class="table" id="excelDataTable" >
+        <thead>
+          <tr>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <p>A seguito di un preprocessing, tramite il quale vengono eliminate tutte le parti del corpus non necessarie
+      (come punteggiatura, caratteri speciali, tag html, URL, repeating letters), il testo, etratto da 100000 tweet più wikipedia,
+      viene dato in input ad una Deep Artificial Neural Network (Word2Vec), utilizzata per elaborare il linguaggio (l'addestramento
+      su wikipedia permette a Word2vec di estrarre la semantica della lingua italiana).
+      <br>
+      L'algoritmo richiede in ingresso un corpus e restituisce
+      in output una matrice di vettori, dove ogni vettore identifica una parola. I vettori rappresentano la distribuzione semantica delle
+      parole nel testo. Per ogni parola viene costruito in modo univoco un vettore che rappresenta un punto nello spazio multidimensionale
+      creato. In questo spazio le parole saranno più vicine se riconosciute semanticamente simili.
+    </p>
+
+  </div>
+</div>
+
+<!-- Container (The Som Network Section) -->
+<script>
+  function resizeIframe(obj, height) {
+    obj.style.height = height + 'px';
+    if (height != "undefined"){
+      obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+    obj.style.width = document.getElementById("tweets").offsetWidth + 'px';
+ }
+</script>
+
+<div id="carousel" class="carousel slide" data-ride="carousel">
+
+    <div class="container">
+      <h4 class="text-center">U Matrix</h4>
+      <br>
+      <p>Le parole, convertite in punti nello spazio dalla rete neurale Word2Vec (word embedding),
+        vengono date in input ad un'altra rete neurale Self Organizing Map (SOM), la quale produce una mappa di codebook (prototipi).
+        Ogni codebook rappresenta un insieme di parole semanticamente vicine e viene posizionato nella mappa
+        in base alla sua distanza semantica rispetto agli altri prototipi.
+        <br>
+        La U-matrix (unified distance matrix) è una rappresentazione della self-organizing map (SOM) in cui le parole vengono mappate
+        in una griglia bidimensionale, dove la distanza euclidea tra i prototipi è raffigurata in una scala di colori tra il giallo il verde e il blu.
+        I codebook di colore chiaro (giallo, verde) sono più vicini tra loro, i prototipi di colore scuro (celeste, blu)
+        indicano prototipi più lontani nella mappa</p>
+      <ol class="carousel-indicators">
+        <li data-target="#carousel" data-slide-to="0" class="active"></li>
+        <!--<li data-target="#carousel" data-slide-to="1"></li>-->
+        <!--<li data-target="#myCarousel" data-slide-to="2"></li>-->
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img src="{{ url_for('static', filename='images/umatrix.png') }}" alt="Umatrix">
+          <!--<img src="{{ url_for('static', filename='images/umatrix.png') }}" alt="Umatrix">-->
+          <!--<div class="carousel-caption">-->
+            <!--<h3>U Matrix</h3>-->
+          <!--</div>-->
+        </div>
+
+        <!--<div class="item">-->
+          <!--<img src="{{ url_for('static', filename='images/codebook_activation.png') }}" alt="Codebook activation" width="1200" height="700">-->
+          <!--<div class="carousel-caption">-->
+            <!--<h3>Codebook activation</h3>-->
+            <!--<p>Thank you, Chicago - A night we won't forget.</p>-->
+          <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="item">-->
+          <!--<img src="la.jpg" alt="Los Angeles" width="1200" height="700">-->
+          <!--<div class="carousel-caption">-->
+            <!--<h3>LA</h3>-->
+            <!--<p>Even though the traffic was a mess, we had the best time playing at Venice Beach!</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <!-- Left and right controls -->
+      <!--<a class="left carousel-control" href="#carousel" role="button" data-slide="prev">-->
+        <!--<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>-->
+        <!--<span class="sr-only">Previous</span>-->
+      <!--</a>-->
+      <!--<a class="right carousel-control" href="#carousel" role="button" data-slide="next">-->
+        <!--<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>-->
+        <!--<span class="sr-only">Next</span>-->
+      <!--</a>-->
+    </div>
+      <p>La umatrix mostra la densità delle varie zone e quindi dove sono distribuiti i codebook più addensati rispetto agli altri.
+        Ricordando che il colore chiaro nella mappa è rappresentativo di una
+        zona densa di codebook, andiamo ad analizzare i prototipi in posizione (8,6), (8,8), (8,9) e (7,9).
+        Il prototipo (7,9) contiene le parole: latest, electric, sentinel, thanks, italiacerca, daily, skyartehd, socialmedia, tweets.
+        Il prototipo (8,8) contiene le parole: permission, followfriday, another, customers, forward, executive, confirmation, blocked, morning, solution, read.
+        Il prototipo (8,9) contiene le parole: selfie, network, influencers, joshua, glenister, engaged, members, value.
+        Il prototipo (8,6) contiene le parole: changed, respond, didn, maybe, soon, cancel, kind, hope.
+      </p>
+</div>
+
+<!-- Container (TOUR Section) -->
+<div id="clustering" class="bg-1">
+  <div class="container">
+    <h4 class="text-center">Frequenza dei concetti</h4>
+    <p> Ogni prototipo è identificato da una parola che lo rappresenta e che descrive il concetto di tutte le parole in esso contenute.
+        Nei seguenti grafici vengono rappresentati tutti i prototipi estratti dalla SOM, ogni bolla rappresenta un prototipo
+        la cui grandezza indica la frequenza del concetto utilizzato nel testo.
+    </p>
+    <br>
+    <h3 class="text-center">Grafico applicato su 100000 tweet</h3>
+  </div>
+    <iframe src="{{ url_for('bubbleChart') }}" frameborder="0" scrolling="no"
+          onload="resizeIframe(this)"></iframe>
+    <h3 class="text-center">Grafico applicato sul campione di esempio</h3>
+    <iframe src="{{ url_for('bubbleChartSample') }}" frameborder="0" scrolling="no"
+          onload="resizeIframe(this)"></iframe>
+
+  <!-- Modal -->
+  <!--<div class="modal fade" id="myModal" role="dialog">-->
+    <!--<div class="modal-dialog">-->
+
+      <!--&lt;!&ndash; Modal content&ndash;&gt;-->
+      <!--&lt;!&ndash;<div class="modal-content">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="modal-header">&ndash;&gt;-->
+          <!--&lt;!&ndash;<button type="button" class="close" data-dismiss="modal">×</button>&ndash;&gt;-->
+          <!--&lt;!&ndash;<h4><span class="glyphicon glyphicon-lock"></span> Tickets</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="modal-body">&ndash;&gt;-->
+          <!--&lt;!&ndash;<form role="form">&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+              <!--&lt;!&ndash;<label for="psw"><span class="glyphicon glyphicon-shopping-cart"></span> Tickets, $23 per person</label>&ndash;&gt;-->
+              <!--&lt;!&ndash;<input type="number" class="form-control" id="psw" placeholder="How many?">&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+              <!--&lt;!&ndash;<label for="usrname"><span class="glyphicon glyphicon-user"></span> Send To</label>&ndash;&gt;-->
+              <!--&lt;!&ndash;<input type="text" class="form-control" id="usrname" placeholder="Enter email">&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+              <!--&lt;!&ndash;<button type="submit" class="btn btn-block">Pay&ndash;&gt;-->
+                <!--&lt;!&ndash;<span class="glyphicon glyphicon-ok"></span>&ndash;&gt;-->
+              <!--&lt;!&ndash;</button>&ndash;&gt;-->
+          <!--&lt;!&ndash;</form>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="modal-footer">&ndash;&gt;-->
+          <!--&lt;!&ndash;<button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span> Cancel&ndash;&gt;-->
+          <!--&lt;!&ndash;</button>&ndash;&gt;-->
+          <!--&lt;!&ndash;<p>Need <a href="#">help?</a></p>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  </div>
+</div>
+
+<div id="mst" class="container text-center">
+  <h4>Minimum Spanning Tree</h4>
+  <p>
+    Di seguito vediamo una rappresentazione grafica delle parole trovate nei tweet rappresentative dei prototipi della SOM su cui è stato calcolato
+    un Minimum Spanning Tree. Ogni nodo rappresenta un prototipo e la parola che vediamo è la parola più vicina al centroide del prototipo.
+    L'albero delle connessioni identifica le associazioni maggiormente rilevanti che connettono tutti i nodi.
+  </p>
+  <br>
+  <h3>
+    MST calcolato sui 100000 tweet
+  </h3>
+</div>
+    <iframe src="{{ url_for('networkGraph') }}" frameborder="0"
+          onload="resizeIframe(this)" style="overflow: scroll;"></iframe>
+
+<p class="text-center">Perlustrando l'albero si possono vedere i vari concetti di cui si parla all'interno dei tweet e come sono collegati tra di loro.
+  C'è un ramo in cui troviamo i tweet in inglese che parte dalla parola service e si dirama con le parole have, customers, never, bought, etc. Possiamo
+  vedere il ramo delle lamentele descritto da vergogna, pessimo, cavolo, chiacchiere, capaci, scherzando e finta collegato con la parola azienda e service. Nei tweet si parla anche
+  di mail, account, user così come delle offerte, modificare tariffe, passare al concorrente, attivare altre opzioni. Gli utenti di Twitter sono anche
+  interessati ai traffico internet e lo vediamo tramite le parole: traffico, giga, roaming, gratuito collegate tra di loro. Un altro ramo descrive i
+  tweet che parlano di connessione composto dalle parole: connessione, segnale, inutilizzabile e velocità. Il ramo composto dalle parole:
+  riesco, vorrei, piacerebbe, potete, dovete, please, serve, descrive i tweet relativi alle richieste.
+  Il ramo: abbonamento, sottoscritto, disdico, padre, figlia, appartiene, descrive i tweet dei clienti che contattano la Tre
+  con abbonamenti intestati ai familiari.
+  Il ramo: wifi, reset, modello, originale, fibra, parla delle conversazioni relative ai modem wifi.
+  La parola provincia è giustamente collegata a segnale
+  poichè la copertura del segnale della Tre dipende dalla provincia in cui l'utente si trova.
+</p>
+
+<div id="mst-sample" class="container text-center">
+  <h3>
+    MST calcolato sul campione di esempio
+  </h3>
+</div>
+    <iframe src="{{ url_for('networkGraphSample') }}" frameborder="0"
+          onload="resizeIframe(this) " style="overflow: scroll;"></iframe>
+<p class="text-center">
+Nel campione di esempio preso in considerazione i tweet parlano di diversi argomenti, come ad esempio dei servizi internet con le parole:
+  mail e account oppure di traffico dati con le parole: giga, traffico, connessione, velocità, roaming, umts.
+  La parola mangiare potrebbe sembrare un errore poichè è collegata con giga, ma in realtà esprime un modo di dire "si è mangiato i giga/si è mangiato il traffico".
+Bisogna infatti ricordarsi che si sta analizzando un linguaggio utilizzato su twitter e quindi informale.
+Il ramo composto dalle parole: abbonamento, smartphone, rendo, ipad, spot, brand, descrive i tweet relativi agli smartphone presi dagli
+utenti sottoscrivendo un abbonamento e che possono essere resi indietro.
+Inoltre abbiamo alcuni tweet che riguardano clienti soddisfatti descritti dal ramo: soddisfazione, bravi, clienti,
+unici, risolvere. Anche in questo grafo si ripete il collegamento segnale e provincia.
+</p>
+<!-- Add Google Maps -->
+<!--<div id="googleMap"></div>-->
+
+<!-- Footer -->
+<footer class="text-center">
+  <a class="up-arrow" href="#myPage" data-toggle="tooltip" title="TO TOP">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a><br><br>
+</footer>
+
+<script>
+$(document).ready(function(){
+  // Initialize Tooltip
+  $('[data-toggle="tooltip"]').tooltip();
+
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 900, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+})
+</script>
+
+</body>
+</html>

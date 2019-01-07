@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="demo" class="result">
+    <button id="getEntitiesPlotD3" type="button" class="button">Get Entities D3</button>
+    <button id="getEntitiesPlotJson" type="button" class="button">Get Entities Json</button>
+    <button id="bar" type="button" class="getCellFrequencyDistribution">Get Cell Frequency Distribution Bar</button>
+    <!--<button id="bubble" type="button" class="getCellFrequencyDistribution">Get Cell Frequency Distribution Bubble</button>-->
+    <button id="getCostOfSom" type="button" class="button">Get Cost Of Som</button>
+    <button id="getCodebookActivation" type="button" class="button">Get Codebook Activation</button>
+    <button id="getUmatrix" type="button" class="button">Get Umatrix</button>
+    <button id="doClusteringAndPlot" type="button" class="button">Do Clustering And Plot</button>
+    <button id="getEmbeddedWords" type="button" class="button">Get Embedded Words</button>
+    <button id="cleanText" type="button" class="button">Clean Text</button>
+    <button id="getCodebookWords" type="button" class="button">Get Codebook Words</button>
+    <button id="computeTopics" type="button" class="button">Compute Topics</button>
+    <button id="trainWord2Vec" type="button" class="button">Train Word2Vec</button>
+    <button id="trainSom" type="button" class="button">Train SOM</button>
+    <button id="trainCodebookClustering" type="button" class="button">Train Codebook Cluster</button>
+    <button id="trainNgram" type="button" class="button">Train Bigram</button>
+    <button id="keywordsExtraction1" type="button" class="button">Keywords Extraction</button>
+    <button id="keywordsExtractionJson" type="button" class="button">Keywords Extraction Json</button>
+    <button id="textRanking1" type="button" class="button">Text Ranking</button>
+    <button id="textRankingJson" type="button" class="button">Text Ranking Json</button>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
+<script type="text/javascript">
+
+//var host_port = "localhost:10601"
+var host_port = "192.168.99.100:10601"
+
+
+//var host_port = "localhost:80"
+//var host_port = "192.168.99.100:4000"
+
+var tweets = [{"message":"Posso essere chiamato da un operatore 3"},
+{"message":"@Tre_It grazie al #3store di #Arona per il supporto durante il #blackout. Unici ad avere notizie certe. call center da bocciare"},
+{"message":"@Tre_It da un paio di settimane nella metro A di Roma, nonostante ci sia copertura, internet non funziona o, se funziona, è lentissimo."},
+{"message":"@Tre_It strani addebiti da €0,41"},
+{"message":"@Tre_It problema con All-In One: dovrebbe consentire chiamate + sms illimitati verso tutti, ma mi sono stati addebitati sms #SocialCare3"},
+{"message":"#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /nqGm5YEngO https: / /t.co /ha92eLPXGp"},
+{"message":"@Tre_It è due ore che cerco di parlare con un operatore nma come si fa?"},
+{"message":"@tre_it ecco tutte le info non ho mai fatto questa chiamata, perche’ me la avete addebitata? https: / /t.co /Wi3dxAtd6j"},
+{"message":"Avete un servizio clienti pessimo! @Tre_It"},
+{"message":"@Tre_Assistenza @Tre_It sarebbe bastato così poco!"},
+{"message":"@Tre_Assistenza @Tre_It ormai perdo ogni speranza nel vostro customer care dp oltre 1 settimana di la tua pratica è stata preso in carico "},
+{"message":"@Tre_It ma per avere la Card Gold non basta avere un abbonamento All - In 800? #socialcare3 #cardCinema3 #cinema3"},
+{"message":"@Tre_Assistenza @Tre_It Bloccher  il pagamento,nel caso fosse emessa con addebiti non dovuti.Non pago io prima per ricevere rimborso poi."},
+{"message":"@Tre_It Assenza segnale, specie a Casale sul Sile. Riuscite a risolvere in breve tempo? Altrimenti, sono costretta a cambiare operatore."},
+{"message":"@Tre_Assistenza @Tre_It in fase di cosa?Sono 5 giorni che ho addebiti.Anche stanotte.Quanto dura questa fase?"},
+{"message":"@Tre_It non riconosce la mia mail"},
+{"message":"@Tre_Assistenza @Tre_It I dovuti interventi?Faccine che ridono?E' dal primo marzo che ho addebiti e non è escluso che vadano cmq in fattura."},
+{"message":"Rendo questo mondo stupendo soltanto esistendo #sono3mendo https: / /t.co /VGvwNEMeiB @Tre_It https: / /t.co /hgHgMFPMqS https: / /t.co /NvpgoyswjI"},
+{"message":"@bagnidalmondo @Tre_It @Tre_Assistenza ciao novità? io anche stanotte altri addebiti"},
+{"message":"Con tutte le ragazze #sono3mendo @Tre_It festeggia con lui 13 anni! E tu perché sei 3mendo?? https: / /t.co /EJf7NGURd0 https: / /t.co /8ssPHIanEN"},
+{"message":"@Tre_It salve, ma voi non aderite all'iniziativa di regalare internet gratis per la festa della donna come fanno gli altri gestori??"},
+{"message":"@Tre_It ho mandato i miei dati in dm"},
+{"message":"@Tre_It salve mi è arrivato un SMS con la proposta promo 100 giga. 2.5 giga a settimana per tutto il 2016 29€ una tantum. Come l'attivo? Grz"},
+{"message":"@Tre_It @Tre_Assistenza Grazie lo far .  :)"},
+{"message":"@Tre_It Buongiorno a chi posso chiedere per un informazione sulla mia opzione attiva?"},
+{"message":"Lui si che sa fare il moonwalk! #sono3mendo @Tre_It https: / /t.co /UezQoyJqHh https: / /t.co /gG9EtcoqpX"},
+{"message":"#FollowFriday @Tre_It @GiuliaCortese1 top Influencers this week! Have a great weekend :) (Want this FREE? &gt;&gt; https: / /t.co /2VNpGxwoNW)"},
+{"message":"@Tre_Assistenza @Tre_It Io in Italia con voi sto benissimo ma le tariffe all'estero sono scandalose specialmente quelle Internet"},
+{"message":"We're combining w / @Ericsson to meet @Tre_It’s data traffic demands & pave way for #5G: https: / /t.co /8p2CX6WGwN via @CiscoSPMobility"},
+{"message":"@Tre_It ho fatto l'upgrade del piano (MyBusiness) . Come faccio l'upgrade della card Grande Cinema 3 (Gold) ?"},
+{"message":"@Tre_It domani cambio gestore telefonico, mi avete succhiato nove euro in pi  in un mese e non è possibile parlare con un operatore al 133"},
+{"message":"@Tre_It un informazione ma come faccio a vedere il traffico residuo del mio webpocket? grazie"},
+{"message":"@Tre_It MAMMA NON TEMERE #Sono3Mendo TUTTE LE SERE https: / /t.co /zjIZn3UTWq"},
+{"message":"@Tre_It salve sono giorni che ricevo incessantemente addebiti di 0.41cent Spese di attivazione dicitura CU UMTS  https: / /t.co /14XrlDKvUQ"},
+{"message":"@Tre_It ok grazie!"},
+{"message":"@matteograndi @Tre_It in realtà aspettano gli altri due..."},
+{"message":"@Tre_It ciao ma avete già attivato il 4G plus?"},
+{"message":"#MeteoScatto dalla Tonnara di #Palmi, #Ulivarella. #MareLive per @3BMeteo, saluti anche a @Tre_It. #Calabria �� https: / /t.co /lS3ngs6G"},
+{"message":"Safro at work! Spot della 3! #set #roma #facceda3 #vitacon3 #free3 #gianmarcotognazzi @Tre_it"},
+{"message":"Safro at work !! Spot Della 3 ! #set #facceda3 # free3 #vitacon3 @Tre_it"},
+{"message":"@Tre_It #sono3mendo  nhttps: / /t.co /ceCCOGG1KZ"},
+{"message":"@LG_Italia @LioHarris ma è quasi pronto anche per quelli con brand @Tre_It???"},
+{"message":"#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /sevOF0Hgaq https: / /t.co /IC126qxJxD"},
+{"message":"@Tre_It chissà cosa fa nel weekend il nostro amico vedrà c'è posta per te o uscirà  a fare baldoria? #sono3mendo  nhttps: / /t.co /2wJ779fsbY"},
+{"message":"@matteograndi @Tre_It opterei per una forma precoce di Alzheimer"},
+{"message":"@Tre_It sono un cliente tim vorrei passare a 3 con l'offerta che ha anche mio fratello 5 euro al mese giga chiamate ecc come devo fare?"},
+{"message":"@CiaoSonoLino io fino a ieri avevo  @Tre_It anche per voce, ma le sogli settimanali mi stavano strette"},
+{"message":"@speriamobene1 se la @Tre_It includesse 1 gb al mese per il roaming cambierei subito operatore"},
+{"message":"@CiaoSonoLino @Tre_It no, cone tutti gli operatori il roaming non è incluso. Io vivendo e lavorando a Roma non sono mai andato in roaming"},
+{"message":"@speriamobene1 pero vale solo sotto rete @Tre_It vero? Quando si aggancia alle altre sono senza internet?"},
+{"message":"@BonadonnaMarco @Tre_Assistenza @Tre_It Ancora niente..."},
+{"message":"@matteograndi @Tre_It ma certo che dobbiamo fare chiamiamo questo numero? https: / /t.co /9fHltPvCWE"},
+{"message":"@matteograndi @Tre_It e vabbè ma se tu per info  non rispondi te le cerchi .."},
+{"message":"@Tre_Assistenza @Tre_It Continuo a ricevere sms con scritto  accedi a 3Social, abbiamo risposto  ma non c'è nessuna risposta sul profilo!"},
+{"message":"@matteograndi @Tre_It probabilmente già sta con un altro #ex"},
+{"message":"@matteograndi mi dispiace molto, @Tre_It è una poverata. Soffro per te. Mi dispero per te. Prego per te."},
+{"message":"@Tre_It non riesco a disabilitare la fun.ti ho chiamato di 3, mi da sempre network error anche sotto rete 3,ed ho pagato già 90 cen.grazie"},
+{"message":"@Tre_Assistenza @Tre_It Manca: cessione SIM da privato a SRL (di cui la stessa persona fisica è ammin.) con modifica abbonamento. Si pu ?"},
+{"message":"@Tre_It Sono cliente business e vivo all'estero.C'è modo di parlare con un operatore?Non datemi gli stessi numeri di tel in quanto inutili"},
+{"message":"@Tre_Assistenza è possibile intestare un contratto (attualmente) privato ad un'azienda di cui sono amministratrice? n@Tre_It"},
+{"message":"@Tre_It buongiorno, ho attivato la vs. Sim da un paio di giorni, voglio DISATTIVARE il servizio  Ti Ho Cercato  . come devo fare ?"},
+{"message":"@Tre_Assistenza @Tre_It Si, vi prego.  nDopo 8 anni con voi mi scoccerebbe cambiare :-("},
+{"message":"@BonadonnaMarco @Tre_It @Tre_Assistenza io sto aspettando. Max entro oggi, altrimenti chiudo contratti personali e aziendali per sempre."},
+{"message":"@bagnidalmondo @Tre_It fantastico...@Tre_Assistenza mi hanno chiamato a tel, mi hanno detto che è in via di risoluzione..."},
+{"message":"@BonadonnaMarco @Tre_It Come non detto!!! Appena controllato, addebiti come i tuoi e ieri non era extrasoglia!! https: / /t.co /RoC5Q5Py4i"},
+{"message":"@MicK_ele Anche TIM mi ha sempre rimborsato, in varie occasioni. Non ci sono operatori migliori  n@ciaodom @Tre_It @Tre_Assistenza"},
+{"message":"@Tre_Assistenza @Omiminpo ciao hai avuto riscontro? A me hanno addebitato 54 euro dal 1 Marzo, e naturalmente ancora nulla @Tre_It"},
+{"message":"@Tre_It ROMA NON FUNZIONA INTERNET MOBILE IN ZONA VIALE EUROPA..."},
+{"message":"@Pipp61479281 @ciaodom Problema risolto e soldi restituiti. Ve l'avevo detto che 3 è l'operatore migliore :-)  @Tre_It @Tre_Assistenza"},
+{"message":"@Tre_Assistenza @Tre_It questa risposta va avanti da una settimana"},
+{"message":"@Tre_It @Tre_Assistenza cosa altro dovrei fare?"},
+{"message":"@Tre_It @Tre_Assistenza possibile che non vengo degnato di assistenza???Ormai è passata pi  di una settimana ma ancora nulla!"},
+{"message":"@bagnidalmondo @Tre_It si anche io..ho già contattato Alternatyva (per la zona di roma) (tariffa mobile, infinito su sim wind a 22 euro /mese"},
+{"message":"@BonadonnaMarco @Tre_It problema differente. Ma se non risolvo entro oggi stacco il RID e cambio operatore. Basta."},
+{"message":"@Garolfo consolati non penso @TIM_Official sia peggio di @Tre_It"},
+{"message":"Auguri (in ritardo) @Tre_It "},
+{"message":".@TIM4UGiulia 24 ore senza alcuna risposta? @TIM_Official mai successo in precedenza con @Tre_It e @VodafoneIT! Sono seriamente!"},
+{"message":"Tra l'altro, non leggendo sms nella sim dentro un cubo... Me ne sono accorto perchè ho pagato 5€ di modifica, sapete cosa fa @Tre_It?"},
+{"message":"Avvisato con un sms delle modifiche di un contratto, va bene un tweet per la disdetta? @Tre_It"},
+{"message":"@bagnidalmondo @Tre_It a me tutti addebiti di 0,41 euro con dicitura CU UMTS. Mi hanno preso 50 euro fin'ora...non mi hanno ricontattato."},
+{"message":"@BonadonnaMarco @Tre_It ho seguito la voce, non ricordo! Ma domani devo riprovare, non sono stata richiamata come promesso �"},
+{"message":"@Tre_It @bagnidalmondo ps. puoi dirmi i numeri per parlare con un operatore chiamando il 133? E' imbarazzante come impediscano di parlare"},
+{"message":"@Tre_It @bagnidalmondo ciao, hai ancora il problema degli addebiti? Ti hanno fatto sapere qualcosa? Stesso problema."},
+{"message":"@Tre_It Da 3 giorni vengono addebitati costi extrasoglia ingiustificati. Ancora attendo risposta.Domani blocco carta e passo ad alternatyva."},
+{"message":"@Tre_It le vostre promozioni per chi passa a 3? Grazie"},
+{"message":"#adamscandinaviatour  @cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #Stockholm  "},
+{"message":"@Tre_It Salve, ho un problema: devo avere attivato un abbonamento, anche se non so come... Mondo Giochi Mobile Pay, come lo disattivo?"},
+{"message":"@Tre_It https: / /t.co /ilYKeNVSCe"},
+{"message":"Un altro addio ad @Tre_It ...passato con @WindItalia in 24 ore....costo mese 6 euro con #tre almeno 15+IVA+ costo sim"},
+{"message":"@Tre_It beh... A quanto dicono gli operatori non potevate anticipare il cambio di contratto per un cliente da 7 /8 anni oltre ad altri disagi"},
+{"message":"@Tre_It Sono interessato all'abbonamento Full 400. I 4GB di Internet sono mensili o vengono suddivisi settimanalmente?"},
+{"message":"@Tre_It Sono interessato all'abbonamento solo sim Super Internet Plus. Che piano tariffario è compreso per le chiamate e gli sms?"},
+{"message":"@Tre_It Provincia di Trento, Altopiano della Vigolana, segnale telefonico quasi assente, connessione dati zero, il tutto da domenica..."},
+{"message":"Ti chiama la @Tre_It per questionario di soddisfazione sul servizio e cade la linea... Si sono risposti da soli! :) #tre"},
+{"message":"@Tre_It  salve volevo sapere come mai nella metro M5 di Milano non c'è copertura di rete 3 e il telefono mi prende Tim? Sono passati 2 anni"},
+{"message":"@Tre_It io attendo. Ma alle 9 mi avevano assicurato una telefonata di riscontro entro la mattina e ancora nulla."},
+{"message":"@Tre_It fatto"},
+{"message":"@Tre_It grazie"},
+{"message":"@cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #OSLO #AdamScandinaviaTour CHOOSE me"},
+{"message":"Vorrei tornare a @VodafoneIT o @TIM_Official ma nessuno dei due offre di meglio del piano attuale con @Tre_It #concorrenza"},
+{"message":"@GBuongiglio @Tre_It pensa che l'ultima settimana di ogni messe nn mi rinnovano i minuti perché mi rubano pochi centesimi... #maipiúh3g"},
+{"message":"@Tre_It ho appena preso un pocket cube con offerta web night&day ma ho problemi"},
+{"message":"@ehiluigi @Tre_It donate una ricarica a questo ragazzo, lo renderete felice, con un lavoro stabile per mantenere la famiglia e mangiare (?)"},
+{"message":"@Tre_It  Mi disattivate la promozione e magari pretendete anche che io ne attivi una nuova pagando il costo d'attivazione. Cose da pazzi"},
+{"message":"@Tre_It HO FATTO DUE RICARICHE E NON ME NE È ARRIVATA NEMMENO UNAAAAA n nMA COMEEEE"},
+{"message":"Sono nervoso @Tre_It"},
+{"message":"@stammeceaccort @CittadiSalerno @LIRATV @mattinodinapoli @Tre_It #tre non funziona bene nelle zone di Salerno e Battipaglia"},
+{"message":"@Tre_Assistenza @Tre_It è vergognoso far pagare recesso anticipato per passaggio ad altro gestore @LIRATV @stammeceaccort"},
+{"message":"@Tre_It @stammeceaccort @LIRATV @CittadiSalerno @portale_offerte questa è la tre pagare recesso anticipato https: / /t.co /OuFUZkb3YW"},
+{"message":"@Tre_It Gentile 3, pu  rispondere direttamente nella inbox della app alla richiesta inviata il 05 /03 /2016. O facciamo i girotondi. Grazie ya"},
+{"message":"@Tre_It perché sono 3 giorni che il mio iPad non riceve internet con piano dati Tre? Perennemente Tim (=no internet). Risolvere grazie!"},
+{"message":"@Tre_It Volevo ringraziare x il rimborso. Se ci fosse +controllo su truffe abbonamenti sarebbe meglio.Bravi comunque https: / /t.co /2WlYWBYTkN"},
+{"message":"@Tre_It Sareste gentili da spiegarmi 3EasyPass? In Irlanda, potrei usare i miei gb senza alcun ulteriore costo (sotto rete 3 ovvio)? grazie!"},
+{"message":"@Tre_It sono stata contattata da un vostro operatore ke non capendo la mia problematica ha pensato di richiudere la telefonata!complimenti!"},
+{"message":"@Tre_It come faccio a parlare con un operatore al pi  presto? Chiamando il 133 nessuno mi risponde"},
+{"message":"È appena nato e si sentirà parlare di lui ovunque: è #sono3mendo di @Tre_It. Ecco cos'è: https: / /t.co /0Fz4ZloP96 https: / /t.co /6eWmelph9p"},
+{"message":"@Tre_It perché non mi attivate la promozione ? Attivata telefonicamente ?"},
+{"message":"@Tre_It mi è stato addebitato il servizio lovingirls che non volevo, l ho disattivato ma mi avete mangiato i soldi"},
+{"message":"listino di marzo in casa @Tre_it tra rinnovi e opzioni non pi  attivabili https: / /t.co /YxKaU7ftwj"},
+{"message":"#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /GSdraSoN55 https: / /t.co /EngJekizJB"},
+{"message":"ancora nuove esperienze sugli addebiti da 41 ct di @Tre_it https: / /t.co /k78JiLz7Q3"},
+{"message":"@Tre_It https: / /t.co /K1NXWnWzo1"},
+{"message":"@Tre_It una volta ogni una settimana ogni martedì di 2.50€."},
+{"message":"@Tre_It buongiorno allora senta io fino a ieri avevo la bellezza di 111.25€ ora mi avete scallato 5€ e ho 106.25€  x quale motivo se io pago"},
+{"message":"ho problemi di strani addebiti su mio PocketCube3, pur non avendo mai superato soglia e navigato anche dopo le 24 @Tre_it #buonadomenica"},
+{"message":"@Tre_It buongiorno ieri ho fatto il rivincolo contratto  ora non va pi  Internet e chiamate è normale? 3400889564"},
+{"message":"@Tre_It alle 10:01 vi ho inviato un mp. Vorrei passare a 3"},
+{"message":"@Tre_It da ieri, 5 marzo, zona lago Maggiore senza rete #Tre. Cosa e' successo?"},
+{"message":"@Tre_It ad #Arona provincia #Novara va solo #Tim. Io uso internet per lavoro. Ci muoviamo a sistemare il problema?"},
+{"message":"@Tre_It ciao ho un problema con il mio pocket cube 4G quando connetto lo smartphone non mi manda su internet cosa dovrei fare ?"},
+{"message":"Quanti di voi vorrebbero dire #sono3mendo in buona compagnia davanti al Louvre? https: / /t.co /qK9iPSCcta @Tre_it https: / /t.co /iScCnzLiI9"},
+{"message":"È appena nato e si sentirà parlare di lui ovunque: è #sono3mendo di @Tre_It. Ecco cos'è: https: / /t.co /0Fz4ZloP96 https: / /t.co /B3u1scPWEC"},
+{"message":"Velocità di @Tre_It in LTE qui dove abito io..4 tacche https: / /t.co /C48DwG8g6J"},
+{"message":"@TimeMagazine14 @3Italia ATTENZIONE L'account ufficiale di 3Italia è @Tre_It Grazie"},
+{"message":"@Tre_Assistenza @Tre_It Niente problema non risolto. #Assistenza #tre pessima. Ci rinuncio, cambiero' #gestore'.Eppure era semplice."},
+{"message":"@Tre_It Grande rete LTE di 3..... https: / /t.co /Plk4nzBHFW"},
+{"message":"@Tre_It salve ma esiste un modo umano per parlare con voi a telefono??mi servirebbero delle info per passare a tre"}];
+
+$(function () {
+    $("[id*=getEntitiesPlotD3]").click(function () {
+        var obj = {"type_chart":"d3",
+                   "w2v_model_id":1,
+                   "som_model_id":1,
+                   "tweets":tweets
+                 };
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/doSomAndPlot",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                //$('#demo').html(data);
+
+                document.open();
+                document.write(data);
+                document.close();
+
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=getEntitiesPlotJson]").click(function () {
+        var obj = {"type_chart":"json",
+                   "w2v_model_id":1,
+                   "som_model_id":1,
+                   "tweets":tweets
+                 };
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/doSomAndPlot",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=cleanText]").click(function () {
+        var obj = [{"message":"Posso essere chiamato da un operatore 3", "creation_date":"2017-05-03 11:34:13"},
+ {"message":"Ci sono appena andato a un negozio e o faccio una promozione o niente! Voglio pagare quando chiamo e non vo https: / /t.co /lhRqzJPfpT", "creation_date":"2017-05-03 11:31:51"}];
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/cleanText",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=getCodebookWords]").click(function () {
+        var obj = {"w2v_model_id":1,
+                   "som_model_id":1,
+                   "tweets":[{"message":"Posso essere chiamato da un operatore 3", "creation_date":"2017-05-03 11:34:13"},
+                            {"message":"Ci sono appena andato a un negozio e o faccio una promozione o niente! Voglio pagare quando chiamo e non vo https: / /t.co /lhRqzJPfpT", "creation_date":"2017-05-03 11:31:51"}]};
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/getCodebookWords",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=trainWord2Vec]").click(function () {
+        var obj = {"url_input":"https://gist.githubusercontent.com/Bart6114/8675941/raw/ac4cddcc0909c15ceada2d8c6a303206b10796d9/creditset.csv"};
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/trainWord2Vec",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=trainNgram]").click(function () {
+        var obj = {"url_input":"https://gist.githubusercontent.com/Bart6114/8675941/raw/ac4cddcc0909c15ceada2d8c6a303206b10796d9/creditset.csv"};
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/trainNgram",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=keywordsExtraction1]").click(function () {
+        var obj = {"url_input":"https://gist.githubusercontent.com/Bart6114/8675941/raw/ac4cddcc0909c15ceada2d8c6a303206b10796d9/creditset.csv",
+                   "bigram_model_id":"1"
+        };
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/keywordsExtraction",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=keywordsExtractionJson]").click(function () {
+        var obj2 = {"tweets":tweets,
+                   "bigram_model_id":"1"
+        };
+        console.log("sono quiiiiiiiiiiiii");
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/keywordsExtraction",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj2),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=textRanking1]").click(function () {
+        var obj = {"url_input":"https://gist.githubusercontent.com/Bart6114/8675941/raw/ac4cddcc0909c15ceada2d8c6a303206b10796d9/creditset.csv",
+                   "bigram_model_id":"1",
+                   "w2v_model_id":"1"
+        };
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/textRanking",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=textRankingJson]").click(function () {
+        var obj = {"tweets":tweets,
+                   "bigram_model_id":"1",
+                   "w2v_model_id":"1"
+        };
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/textRanking",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=trainSom]").click(function () {
+        var obj = {"w2v_model_id":1};
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/trainSom",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=trainCodebookClustering]").click(function () {
+        var obj = {"som_model_id":1};
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/trainCodebookClustering",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=getEmbeddedWords]").click(function () {
+        var obj = {"w2v_model_id":1,
+                   "tweets":[
+                       {"message":"Posso essere chiamato da un operatore 3"},
+                       {"message":"Ci sono appena andato a un negozio e o faccio una promozione o niente! Voglio pagare quando chiamo e non vo "}
+				  ]};
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/getEmbeddedWords",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $(".getCellFrequencyDistribution").click(function () {
+        var type_chart = $(this).attr('id');
+        var obj = {
+                    "type_chart":type_chart,
+                    "num":30,
+                    "w2v_model_id":1,
+                    "som_model_id":1,
+                    "tweets":tweets
+                  };
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/getCellFrequencyDistribution",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                $('#demo').replaceWith(data);
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=doClusteringAndPlot]").click(function () {
+        var obj = tweets;
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/getFrequencies",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                //$('#demo').replaceWith(data);
+                $('#demo').html(data);
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+$(function () {
+    $("[id*=computeTopics]").click(function () {
+        var obj = {
+                    "w2v_model_id":1,
+                    "som_model_id":1,
+                    "codebook_cluster_model_id":1,
+                    "tweets":tweets
+                    }
+        $.ajax({
+            type: "POST",
+            url:  "http://"+host_port+"/openReq/computeTopics",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                console.log(data);
+                console.log(JSON.stringify(data));
+                alert(JSON.stringify(data));
+            },
+         error: function(jqxhr, status, exception) {
+             alert('Internal Server Error');
+             console.log('Exception:', exception);
+             console.log('status:', status);
+             console.log('jqxhr:', jqxhr);
+         }
+        });
+        return false;
+    });
+});
+
+
+$(function () {
+    $("[id*=getCostOfSom]").click(function () {
+        url = "http://"+host_port+"/openReq/getCostOfSom?som_model_id=1";
+        window.location.replace(url);
+    });
+});
+
+$(function () {
+    $("[id*=getUmatrix]").click(function () {
+        url = "http://"+host_port+"/openReq/getUmatrix?som_model_id=1";
+        window.location.replace(url);
+    });
+});
+
+$(function () {
+    $("[id*=getCodebookActivation]").click(function () {
+        url = "http://"+host_port+"/openReq/getCodebookActivation?som_model_id=1";
+        window.location.replace(url);
+    });
+});
+</script>
+
+</body>
+</html>
