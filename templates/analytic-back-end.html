@@ -976,8 +976,6 @@
             csv_file_input = $('#csvFileInput').val();
             text_to_predict = $("#text-to-predict").val()
 
-            console.log(text_to_predict);
-
             if (w2v_model_id == "" || som_model_id == "" || (csv_file_input == ""  && text_to_predict == "")){
                 $("#alert1").css("display","block");
                  $("#entities").collapse("hide");
@@ -1391,7 +1389,6 @@
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(tweets),
             success: function (data) {
-                console.log( this.url);
                 $("#text-cleaned").text(data);
             },
             error: function(jqxhr, status, exception) {
