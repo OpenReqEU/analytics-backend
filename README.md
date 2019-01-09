@@ -24,3 +24,7 @@ The microservices are useful to performs a topic extraction of the tweets addres
 It is also exposed a web interface available [here] (http://217.172.12.199:10601/openReq/interactive-visualization/).
 
 [You can use model id 1 to test the API]
+
+
+
+Free use of this software is granted under the terms of the EPL version 2 (EPL2.0)

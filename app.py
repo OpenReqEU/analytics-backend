@@ -103,6 +103,7 @@ def cleanText():
                      type: string
     """
     log.info("/openReq/cleanText")
+    r = request
     data_json = json.dumps(request.get_json(silent=True))
     input_list = pd.read_json(data_json, encoding='utf8')['message'].tolist()
 
@@ -498,7 +499,16 @@ def getCodebookActivation():
         return returnModelStatus(filename, som_model_id)
 
     png = som_ms.getCodebookActivation(som_model)
-    return send_file(png, mimetype='image/gif')
+
+    # f = open(png, 'r+')
+    # data = f.read()
+
+    import base64
+    with open(png, "rb") as imageFile:
+        s = base64.b64encode(imageFile.read())
+
+    return json.dumps({'picture': s})
+    # return send_file(png, mimetype='image/gif')
 
 
 # plot
@@ -600,7 +610,8 @@ def getCellFrequencyDistribution():
         return returnModelStatus(filename, som_model_id)
 
     html = som_ms.getCellFrequencyDistribution(input_list, w2v_model, som_model, num, type_chart)
-    return html
+    return json.dumps({'html': html})
+    # return html
 
 
 # plot
@@ -648,9 +659,14 @@ def getUmatrix():
         filename = conf.get('MAIN', 'path_pickle_som_model_incr_fold') + "som_" + str(som_model_id) + "_training.txt"
         return returnModelStatus(filename, som_model_id)
 
-
     png = som_ms.getUmatrix(som_model)
-    return send_file(png, mimetype='image/gif')
+
+    import base64
+    with open(png, "rb") as imageFile:
+        s = base64.b64encode(imageFile.read())
+
+    return json.dumps({'picture': s})
+    # return send_file(png, mimetype='image/gif')
 
 
 # plot

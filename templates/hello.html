@@ -28,8 +28,8 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js"></script>
 <script type="text/javascript">
 
-//var host_port = "localhost:10601"
-var host_port = "192.168.99.100:10601"
+var host_port = "localhost:10601"
+//var host_port = "192.168.99.100:10601"
 
 
 //var host_port = "localhost:80"
@@ -356,7 +356,6 @@ $(function () {
         var obj2 = {"tweets":tweets,
                    "bigram_model_id":"1"
         };
-        console.log("sono quiiiiiiiiiiiii");
         $.ajax({
             type: "POST",
             url:  "http://"+host_port+"/openReq/keywordsExtraction",
@@ -518,7 +517,9 @@ $(function () {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(obj),
             success: function (data) {
-                $('#demo').replaceWith(data);
+                var jsonValidString = JSON.stringify(eval("(" + data + ")"));
+                var JSONObj=JSON.parse(jsonValidString);
+                $('#demo').replaceWith(JSONObj["html"]);
             },
          error: function(jqxhr, status, exception) {
              alert('Internal Server Error');

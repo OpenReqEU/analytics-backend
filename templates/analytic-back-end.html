@@ -910,7 +910,9 @@
             type: "GET",
             mimeType: "text/plain; charset=x-user-defined"
         }).done(function( data, textStatus, jqXHR ) {
-            $("#Umatrix").attr('src', 'data:image/jpeg;base64,' + base64encode(data));
+            var jsonValidString = JSON.stringify(eval("(" + data + ")"));
+            var JSONObj=JSON.parse(jsonValidString);
+            $("#Umatrix").attr('src', 'data:image/jpeg;base64,' + JSONObj["picture"]);
         }).fail(function( jqXHR, textStatus, errorThrown ) {
             alert("fail: " + errorThrown);
         });
