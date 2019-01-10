@@ -2406,22 +2406,255 @@ def test_textRanking(client):
     json_data = json.loads(rv.get_data())
     assert (isinstance(json_data, list)) and  (rv.status_code == 200)
 
-# def test_openingok_get(client):
-#     query_string = "phase=openingand identificativo_tt=CBV000011332336and tipo_serv=FTTCand tipo_cliente=SoHoand flag_prip=Nand aoa=CENTROand aol=Toscana%20ovestand aou=FF_TOO_OSand canale_provenienza=HCand provenienza_agg=Humanand bacino=OA%20ASA%20MOI%20Ennovaand flag_tt_padre=Nand desc_evento_cat=Mancata%20connessioneand desc_diagnosi_cat=Disservizioand impianto=7b58f9415c7d8a8b18be26802618a365"
-#     rv = client.get("/model-recall", query_string=query_string)
-#
-#     result_data =  b'<root><T><I>casa</I><V>0.294</V></T><T><I>dispaccio</I><V>0.0</V></T><T><I>target_15</I><V>0.453</V></T><T><I>target_30</I><V>0.57</V></T><T><I>target_7</I><V>0.326</V></T></root>'
-#
-#     # assert (rv.data == result_data)
-#     # assert (rv.status_code == 200)
-#
-#     assert result_data.decode("utf-8").split("<V>")[0] == '<root><T><I>casa</I>'
-#     assert result_data.decode("utf-8").split("</V>")[1].split("<V>")[0] == '</T><T><I>dispaccio</I>'
-#     assert result_data.decode("utf-8").split("</V>")[2].split("<V>")[0] == '</T><T><I>target_15</I>'
-#     assert result_data.decode("utf-8").split("</V>")[3].split("<V>")[0] == '</T><T><I>target_30</I>'
-#     assert result_data.decode("utf-8").split("</V>")[4].split("<V>")[0] == '</T><T><I>target_7</I>'
-#     assert result_data.decode("utf-8").split("</V>")[5] == '</T></root>'
-#
+def test_trainWord2Vec(client):
+    data = {"tweets":[
+              {"message": "Posso essere chiamato da un operatore 3"},
+              {"message": "@Tre_It grazie al #3store di #Arona per il supporto durante il #blackout. Unici ad avere notizie certe. call center da bocciare"},
+              {"message": "@Tre_It da un paio di settimane nella metro A di Roma, nonostante ci sia copertura, internet non funziona o, se funziona, e lentissimo."},
+              {"message": "@Tre_It strani addebiti da euro 0,41"},
+              {"message": "@Tre_It problema con All-In One: dovrebbe consentire chiamate + sms illimitati verso tutti, ma mi sono stati addebitati sms #SocialCare3"},
+              {"message": "#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /nqGm5YEngO https: / /t.co /ha92eLPXGp"},
+              {"message": "@Tre_It e due ore che cerco di parlare con un operatore nma come si fa?"},
+              {"message": "@tre_it ecco tutte le info non ho mai fatto questa chiamata, perche me la avete addebitata? https: / /t.co /Wi3dxAtd6j"},
+              {"message": "Avete un servizio clienti pessimo! @Tre_It"},
+              {"message": "@Tre_Assistenza @Tre_It sarebbe bastato cosi poco!"},
+              {"message": "@Tre_Assistenza @Tre_It ormai perdo ogni speranza nel vostro customer care dp oltre 1 settimana di la tua pratica e stata preso in carico "},
+              {"message": "@Tre_It ma per avere la Card Gold non basta avere un abbonamento All - In 800? #socialcare3 #cardCinema3 #cinema3"},
+              {"message": "@Tre_Assistenza @Tre_It Bloccher  il pagamento,nel caso fosse emessa con addebiti non dovuti.Non pago io prima per ricevere rimborso poi."},
+              {"message": "@Tre_It Assenza segnale, specie a Casale sul Sile. Riuscite a risolvere in breve tempo? Altrimenti, sono costretta a cambiare operatore."},
+              {"message": "@Tre_Assistenza @Tre_It in fase di cosa?Sono 5 giorni che ho addebiti.Anche stanotte.Quanto dura questa fase?"},
+              {"message": "@Tre_It non riconosce la mia mail"},
+              {"message": "@Tre_Assistenza @Tre_It I dovuti interventi?Faccine che ridono?E' dal primo marzo che ho addebiti e non e escluso che vadano cmq in fattura."},
+              {"message": "Rendo questo mondo stupendo soltanto esistendo #sono3mendo https: / /t.co /VGvwNEMeiB @Tre_It https: / /t.co /hgHgMFPMqS https: / /t.co /NvpgoyswjI"},
+              {"message": "@bagnidalmondo @Tre_It @Tre_Assistenza ciao novita? io anche stanotte altri addebiti"},
+              {"message": "Con tutte le ragazze #sono3mendo @Tre_It festeggia con lui 13 anni! E tu perche sei 3mendo?? https: / /t.co /EJf7NGURd0 https: / /t.co /8ssPHIanEN"},
+              {"message": "@Tre_It salve, ma voi non aderite all'iniziativa di regalare internet gratis per la festa della donna come fanno gli altri gestori??"},
+              {"message": "@Tre_It ho mandato i miei dati in dm"},
+              {"message": "@Tre_It salve mi e arrivato un SMS con la proposta promo 100 giga. 2.5 giga a settimana per tutto il 2016 29 euro una tantum. Come l'attivo? Grz"},
+              {"message": "@Tre_It @Tre_Assistenza Grazie lo far .  :)"},
+              {"message": "@Tre_It Buongiorno a chi posso chiedere per un informazione sulla mia opzione attiva?"},
+              {"message": "Lui si che sa fare il moonwalk! #sono3mendo @Tre_It https: / /t.co /UezQoyJqHh https: / /t.co /gG9EtcoqpX"},
+              {"message": "#FollowFriday @Tre_It @GiuliaCortese1 top Influencers this week! Have a great weekend :) (Want this FREE? and gt;and gt; https: / /t.co /2VNpGxwoNW)"},
+              {"message": "@Tre_Assistenza @Tre_It Io in Italia con voi sto benissimo ma le tariffe all'estero sono scandalose specialmente quelle Internet"},
+              {"message": "@Tre_It ho fatto l'upgrade del piano (MyBusiness) . Come faccio l'upgrade della card Grande Cinema 3 (Gold) ?"},
+              {"message": "@Tre_It domani cambio gestore telefonico, mi avete succhiato nove euro in pi  in un mese e non e possibile parlare con un operatore al 133"},
+              {"message": "@Tre_It un informazione ma come faccio a vedere il traffico residuo del mio webpocket? grazie"},
+              {"message": "@Tre_It MAMMA NON TEMERE #Sono3Mendo TUTTE LE SERE https: / /t.co /zjIZn3UTWq"},
+              {"message": "@Tre_It salve sono giorni che ricevo incessantemente addebiti di 0.41cent Spese di attivazione dicitura CU UMTS  https: / /t.co /14XrlDKvUQ"},
+              {"message": "@Tre_It ok grazie!"},
+              {"message": "@matteograndi @Tre_It in realta aspettano gli altri due..."},
+              {"message": "@Tre_It ciao ma avete gia attivato il 4G plus?"},
+              {"message": "#MeteoScatto dalla Tonnara di #Palmi, #Ulivarella. #MareLive per @3BMeteo, saluti anche a @Tre_It. #Calabria https: / /t.co /lS3ngs6G"},
+              {"message": "Safro at work! Spot della 3! #set #roma #facceda3 #vitacon3 #free3 #gianmarcotognazzi @Tre_it"},
+              {"message": "Safro at work !! Spot Della 3 ! #set #facceda3 # free3 #vitacon3 @Tre_it"},
+              {"message": "@Tre_It #sono3mendo  nhttps: / /t.co /ceCCOGG1KZ"},
+              {"message": "@LG_Italia @LioHarris ma e quasi pronto anche per quelli con brand @Tre_It???"},
+              {"message": "#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /sevOF0Hgaq https: / /t.co /IC126qxJxD"},
+              {"message": "@Tre_It chissa cosa fa nel weekend il nostro amico vedra c'e posta per te o uscira  a fare baldoria? #sono3mendo  nhttps: / /t.co /2wJ779fsbY"},
+              {"message": "@matteograndi @Tre_It opterei per una forma precoce di Alzheimer"},
+              {"message": "@Tre_It sono un cliente tim vorrei passare a 3 con l'offerta che ha anche mio fratello 5 euro al mese giga chiamate ecc come devo fare?"},
+              {"message": "@CiaoSonoLino io fino a ieri avevo  @Tre_It anche per voce, ma le sogli settimanali mi stavano strette"},
+              {"message": "@speriamobene1 se la @Tre_It includesse 1 gb al mese per il roaming cambierei subito operatore"},
+              {"message": "@CiaoSonoLino @Tre_It no, cone tutti gli operatori il roaming non e incluso. Io vivendo e lavorando a Roma non sono mai andato in roaming"},
+              {"message": "@speriamobene1 pero vale solo sotto rete @Tre_It vero? Quando si aggancia alle altre sono senza internet?"},
+              {"message": "@BonadonnaMarco @Tre_Assistenza @Tre_It Ancora niente..."},
+              {"message": "@matteograndi @Tre_It ma certo che dobbiamo fare chiamiamo questo numero? https: / /t.co /9fHltPvCWE"},
+              {"message": "@matteograndi @Tre_It e vabbe ma se tu per info  non rispondi te le cerchi .."},
+              {"message": "@Tre_Assistenza @Tre_It Continuo a ricevere sms con scritto  accedi a 3Social, abbiamo risposto  ma non c'e nessuna risposta sul profilo!"},
+              {"message": "@matteograndi @Tre_It probabilmente gia sta con un altro #ex"},
+              {"message": "@matteograndi mi dispiace molto, @Tre_It e una poverata. Soffro per te. Mi dispero per te. Prego per te."},
+              {"message": "@Tre_It non riesco a disabilitare la fun.ti ho chiamato di 3, mi da sempre network error anche sotto rete 3,ed ho pagato gia 90 cen.grazie"},
+              {"message": "@Tre_Assistenza @Tre_It Manca: cessione SIM da privato a SRL (di cui la stessa persona fisica e ammin.) con modifica abbonamento. Si pu ?"},
+              {"message": "@Tre_It Sono cliente business e vivo all'estero.C'e modo di parlare con un operatore?Non datemi gli stessi numeri di tel in quanto inutili"},
+              {"message": "@Tre_Assistenza e possibile intestare un contratto (attualmente) privato ad un'azienda di cui sono amministratrice? n@Tre_It"},
+              {"message": "@Tre_It buongiorno, ho attivato la vs. Sim da un paio di giorni, voglio DISATTIVARE il servizio  Ti Ho Cercato  . come devo fare ?"},
+              {"message": "@Tre_Assistenza @Tre_It Si, vi prego.  nDopo 8 anni con voi mi scoccerebbe cambiare :-("},
+              {"message": "@BonadonnaMarco @Tre_It @Tre_Assistenza io sto aspettando. Max entro oggi, altrimenti chiudo contratti personali e aziendali per sempre."},
+              {"message": "@bagnidalmondo @Tre_It fantastico...@Tre_Assistenza mi hanno chiamato a tel, mi hanno detto che e in via di risoluzione..."},
+              {"message": "@BonadonnaMarco @Tre_It Come non detto!!! Appena controllato, addebiti come i tuoi e ieri non era extrasoglia!! https: / /t.co /RoC5Q5Py4i"},
+              {"message": "@MicK_ele Anche TIM mi ha sempre rimborsato, in varie occasioni. Non ci sono operatori migliori  n@ciaodom @Tre_It @Tre_Assistenza"},
+              {"message": "@Tre_Assistenza @Omiminpo ciao hai avuto riscontro? A me hanno addebitato 54 euro dal 1 Marzo, e naturalmente ancora nulla @Tre_It"},
+              {"message": "@Tre_It ROMA NON FUNZIONA INTERNET MOBILE IN ZONA VIALE EUROPA..."},
+              {"message": "@Pipp61479281 @ciaodom Problema risolto e soldi restituiti. Ve l'avevo detto che 3 e l'operatore migliore :-)  @Tre_It @Tre_Assistenza"},
+              {"message": "@Tre_Assistenza @Tre_It questa risposta va avanti da una settimana"},
+              {"message": "@Tre_It @Tre_Assistenza cosa altro dovrei fare?"},
+              {"message": "@Tre_It @Tre_Assistenza possibile che non vengo degnato di assistenza???Ormai e passata pi  di una settimana ma ancora nulla!"},
+              {"message": "@bagnidalmondo @Tre_It si anche io..ho gia contattato Alternatyva (per la zona di roma) (tariffa mobile, infinito su sim wind a 22 euro /mese"},
+              {"message": "@BonadonnaMarco @Tre_It problema differente. Ma se non risolvo entro oggi stacco il RID e cambio operatore. Basta."},
+              {"message": "@Garolfo consolati non penso @TIM_Official sia peggio di @Tre_It"},
+              {"message": "Auguri (in ritardo) @Tre_It "},
+              {"message": ".@TIM4UGiulia 24 ore senza alcuna risposta? @TIM_Official mai successo in precedenza con @Tre_It e @VodafoneIT! Sono seriamente!"},
+              {"message": "Tra l'altro, non leggendo sms nella sim dentro un cubo... Me ne sono accorto perche ho pagato 5 euro di modifica, sapete cosa fa @Tre_It?"},
+              {"message": "Avvisato con un sms delle modifiche di un contratto, va bene un tweet per la disdetta? @Tre_It"},
+              {"message": "@bagnidalmondo @Tre_It a me tutti addebiti di 0,41 euro con dicitura CU UMTS. Mi hanno preso 50 euro fin'ora...non mi hanno ricontattato."},
+              {"message": "@BonadonnaMarco @Tre_It ho seguito la voce, non ricordo! Ma domani devo riprovare, non sono stata richiamata come promesso"},
+              {"message": "@Tre_It @bagnidalmondo ps. puoi dirmi i numeri per parlare con un operatore chiamando il 133? E' imbarazzante come impediscano di parlare"},
+              {"message": "@Tre_It @bagnidalmondo ciao, hai ancora il problema degli addebiti? Ti hanno fatto sapere qualcosa? Stesso problema."},
+              {"message": "@Tre_It Da 3 giorni vengono addebitati costi extrasoglia ingiustificati. Ancora attendo risposta.Domani blocco carta e passo ad alternatyva."},
+              {"message": "@Tre_It le vostre promozioni per chi passa a 3? Grazie"},
+              {"message": "#adamscandinaviatour  @cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #Stockholm  "},
+              {"message": "@Tre_It Salve, ho un problema: devo avere attivato un abbonamento, anche se non so come... Mondo Giochi Mobile Pay, come lo disattivo?"},
+              {"message": "@Tre_It https: / /t.co /ilYKeNVSCe"},
+              {"message": "Un altro addio ad @Tre_It ...passato con @WindItalia in 24 ore....costo mese 6 euro con #tre almeno 15+IVA+ costo sim"},
+              {"message": "@Tre_It beh... A quanto dicono gli operatori non potevate anticipare il cambio di contratto per un cliente da 7 /8 anni oltre ad altri disagi"},
+              {"message": "@Tre_It Sono interessato all'abbonamento Full 400. I 4GB di Internet sono mensili o vengono suddivisi settimanalmente?"},
+              {"message": "@Tre_It Sono interessato all'abbonamento solo sim Super Internet Plus. Che piano tariffario e compreso per le chiamate e gli sms?"},
+              {"message": "@Tre_It Provincia di Trento, Altopiano della Vigolana, segnale telefonico quasi assente, connessione dati zero, il tutto da domenica..."},
+              {"message": "Ti chiama la @Tre_It per questionario di soddisfazione sul servizio e cade la linea... Si sono risposti da soli! :) #tre"},
+              {"message": "@Tre_It  salve volevo sapere come mai nella metro M5 di Milano non c'e copertura di rete 3 e il telefono mi prende Tim? Sono passati 2 anni"},
+              {"message": "@Tre_It io attendo. Ma alle 9 mi avevano assicurato una telefonata di riscontro entro la mattina e ancora nulla."},
+              {"message": "@Tre_It fatto"},
+              {"message": "@Tre_It grazie"},
+              {"message": "@cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #OSLO #AdamScandinaviaTour CHOOSE me"},
+              {"message": "Vorrei tornare a @VodafoneIT o @TIM_Official ma nessuno dei due offre di meglio del piano attuale con @Tre_It #concorrenza"},
+              {"message": "@GBuongiglio @Tre_It pensa che l'ultima settimana di ogni messe nn mi rinnovano i minuti perche mi rubano pochi centesimi... #maipiuh3g"},
+              {"message": "@Tre_It ho appena preso un pocket cube con offerta web nightand day ma ho problemi"},
+              {"message": "@ehiluigi @Tre_It donate una ricarica a questo ragazzo, lo renderete felice, con un lavoro stabile per mantenere la famiglia e mangiare (?)"},
+              {"message": "@Tre_It  Mi disattivate la promozione e magari pretendete anche che io ne attivi una nuova pagando il costo d'attivazione. Cose da pazzi"},
+              {"message": "@Tre_It Grande rete LTE di 3..... https: / /t.co /Plk4nzBHFW"}
+            ]}
+
+    headers = {'content-type': 'application/json'}
+    rv = client.post('/openReq/trainWord2Vec', data=json.dumps(data), headers=headers)
+
+    json_data = json.loads(rv.get_data())
+    assert json_data.keys()==[u'w2v_model_id']
+    assert rv.status_code == 200
+
+def test_trainSom(client):
+    data = {"w2v_model_id":1}
+
+    headers = {'content-type': 'application/json'}
+    rv = client.post('/openReq/trainSom', data=json.dumps(data), headers=headers)
+
+    json_data = json.loads(rv.get_data())
+    assert json_data.keys()==[u'som_model_id']
+    assert rv.status_code == 200
+
+def test_trainNgram(client):
+    data = {"tweets": [
+    {"message": "Posso essere chiamato da un operatore 3"},
+    {"message": "@Tre_It grazie al #3store di #Arona per il supporto durante il #blackout. Unici ad avere notizie certe. call center da bocciare"},
+    {"message": "@Tre_It da un paio di settimane nella metro A di Roma, nonostante ci sia copertura, internet non funziona o, se funziona, e lentissimo."},
+    {"message": "@Tre_It strani addebiti da euro 0,41"},
+    {"message": "@Tre_It problema con All-In One: dovrebbe consentire chiamate + sms illimitati verso tutti, ma mi sono stati addebitati sms #SocialCare3"},
+    {"message": "#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /nqGm5YEngO https: / /t.co /ha92eLPXGp"},
+    {"message": "@Tre_It e due ore che cerco di parlare con un operatore nma come si fa?"},
+    {"message": "@tre_it ecco tutte le info non ho mai fatto questa chiamata, perche me la avete addebitata? https: / /t.co /Wi3dxAtd6j"},
+    {"message": "Avete un servizio clienti pessimo! @Tre_It"},
+    {"message": "@Tre_Assistenza @Tre_It sarebbe bastato cosi poco!"},
+    {"message": "@Tre_Assistenza @Tre_It ormai perdo ogni speranza nel vostro customer care dp oltre 1 settimana di la tua pratica e stata preso in carico "},
+    {"message": "@Tre_It ma per avere la Card Gold non basta avere un abbonamento All - In 800? #socialcare3 #cardCinema3 #cinema3"},
+    {"message": "@Tre_Assistenza @Tre_It Bloccher  il pagamento,nel caso fosse emessa con addebiti non dovuti.Non pago io prima per ricevere rimborso poi."},
+    {"message": "@Tre_It Assenza segnale, specie a Casale sul Sile. Riuscite a risolvere in breve tempo? Altrimenti, sono costretta a cambiare operatore."},
+    {"message": "@Tre_Assistenza @Tre_It in fase di cosa?Sono 5 giorni che ho addebiti.Anche stanotte.Quanto dura questa fase?"},
+    {"message": "@Tre_It non riconosce la mia mail"},
+    {"message": "@Tre_Assistenza @Tre_It I dovuti interventi?Faccine che ridono?E' dal primo marzo che ho addebiti e non e escluso che vadano cmq in fattura."},
+    {"message": "Rendo questo mondo stupendo soltanto esistendo #sono3mendo https: / /t.co /VGvwNEMeiB @Tre_It https: / /t.co /hgHgMFPMqS https: / /t.co /NvpgoyswjI"},
+    {"message": "@bagnidalmondo @Tre_It @Tre_Assistenza ciao novita? io anche stanotte altri addebiti"},
+    {"message": "Con tutte le ragazze #sono3mendo @Tre_It festeggia con lui 13 anni! E tu perche sei 3mendo?? https: / /t.co /EJf7NGURd0 https: / /t.co /8ssPHIanEN"},
+    {"message": "@Tre_It salve, ma voi non aderite all'iniziativa di regalare internet gratis per la festa della donna come fanno gli altri gestori??"},
+    {"message": "@Tre_It ho mandato i miei dati in dm"},
+    {"message": "@Tre_It salve mi e arrivato un SMS con la proposta promo 100 giga. 2.5 giga a settimana per tutto il 2016 29 euro una tantum. Come l'attivo? Grz"},
+    {"message": "@Tre_It @Tre_Assistenza Grazie lo far .  :)"},
+    {"message": "@Tre_It Buongiorno a chi posso chiedere per un informazione sulla mia opzione attiva?"},
+    {"message": "Lui si che sa fare il moonwalk! #sono3mendo @Tre_It https: / /t.co /UezQoyJqHh https: / /t.co /gG9EtcoqpX"},
+    {"message": "#FollowFriday @Tre_It @GiuliaCortese1 top Influencers this week! Have a great weekend :) (Want this FREE? and gt;and gt; https: / /t.co /2VNpGxwoNW)"},
+    {"message": "@Tre_Assistenza @Tre_It Io in Italia con voi sto benissimo ma le tariffe all'estero sono scandalose specialmente quelle Internet"},
+    {"message": "@Tre_It ho fatto l'upgrade del piano (MyBusiness) . Come faccio l'upgrade della card Grande Cinema 3 (Gold) ?"},
+    {"message": "@Tre_It domani cambio gestore telefonico, mi avete succhiato nove euro in pi  in un mese e non e possibile parlare con un operatore al 133"},
+    {"message": "@Tre_It un informazione ma come faccio a vedere il traffico residuo del mio webpocket? grazie"},
+    {"message": "@Tre_It MAMMA NON TEMERE #Sono3Mendo TUTTE LE SERE https: / /t.co /zjIZn3UTWq"},
+    {"message": "@Tre_It salve sono giorni che ricevo incessantemente addebiti di 0.41cent Spese di attivazione dicitura CU UMTS  https: / /t.co /14XrlDKvUQ"},
+    {"message": "@Tre_It ok grazie!"},
+    {"message": "@matteograndi @Tre_It in realta aspettano gli altri due..."},
+    {"message": "@Tre_It ciao ma avete gia attivato il 4G plus?"},
+    {"message": "#MeteoScatto dalla Tonnara di #Palmi, #Ulivarella. #MareLive per @3BMeteo, saluti anche a @Tre_It. #Calabria https: / /t.co /lS3ngs6G"},
+    {"message": "Safro at work! Spot della 3! #set #roma #facceda3 #vitacon3 #free3 #gianmarcotognazzi @Tre_it"},
+    {"message": "Safro at work !! Spot Della 3 ! #set #facceda3 # free3 #vitacon3 @Tre_it"},
+    {"message": "@Tre_It #sono3mendo  nhttps: / /t.co /ceCCOGG1KZ"},
+    {"message": "@LG_Italia @LioHarris ma e quasi pronto anche per quelli con brand @Tre_It???"},
+    {"message": "#CalcioDilettanti: @Tre_It e @DatasportNews lanciano l'App con i risultati di tutta Italia https: / /t.co /sevOF0Hgaq https: / /t.co /IC126qxJxD"},
+    {"message": "@Tre_It chissa cosa fa nel weekend il nostro amico vedra c'e posta per te o uscira  a fare baldoria? #sono3mendo  nhttps: / /t.co /2wJ779fsbY"},
+    {"message": "@matteograndi @Tre_It opterei per una forma precoce di Alzheimer"},
+    {"message": "@Tre_It sono un cliente tim vorrei passare a 3 con l'offerta che ha anche mio fratello 5 euro al mese giga chiamate ecc come devo fare?"},
+    {"message": "@CiaoSonoLino io fino a ieri avevo  @Tre_It anche per voce, ma le sogli settimanali mi stavano strette"},
+    {"message": "@speriamobene1 se la @Tre_It includesse 1 gb al mese per il roaming cambierei subito operatore"},
+    {"message": "@CiaoSonoLino @Tre_It no, cone tutti gli operatori il roaming non e incluso. Io vivendo e lavorando a Roma non sono mai andato in roaming"},
+    {"message": "@speriamobene1 pero vale solo sotto rete @Tre_It vero? Quando si aggancia alle altre sono senza internet?"},
+    {"message": "@BonadonnaMarco @Tre_Assistenza @Tre_It Ancora niente..."},
+    {"message": "@matteograndi @Tre_It ma certo che dobbiamo fare chiamiamo questo numero? https: / /t.co /9fHltPvCWE"},
+    {"message": "@matteograndi @Tre_It e vabbe ma se tu per info  non rispondi te le cerchi .."},
+    {"message": "@Tre_Assistenza @Tre_It Continuo a ricevere sms con scritto  accedi a 3Social, abbiamo risposto  ma non c'e nessuna risposta sul profilo!"},
+    {"message": "@matteograndi @Tre_It probabilmente gia sta con un altro #ex"},
+    {"message": "@matteograndi mi dispiace molto, @Tre_It e una poverata. Soffro per te. Mi dispero per te. Prego per te."},
+    {"message": "@Tre_It non riesco a disabilitare la fun.ti ho chiamato di 3, mi da sempre network error anche sotto rete 3,ed ho pagato gia 90 cen.grazie"},
+    {"message": "@Tre_Assistenza @Tre_It Manca: cessione SIM da privato a SRL (di cui la stessa persona fisica e ammin.) con modifica abbonamento. Si pu ?"},
+    {"message": "@Tre_It Sono cliente business e vivo all'estero.C'e modo di parlare con un operatore?Non datemi gli stessi numeri di tel in quanto inutili"},
+    {"message": "@Tre_Assistenza e possibile intestare un contratto (attualmente) privato ad un'azienda di cui sono amministratrice? n@Tre_It"},
+    {"message": "@Tre_It buongiorno, ho attivato la vs. Sim da un paio di giorni, voglio DISATTIVARE il servizio  Ti Ho Cercato  . come devo fare ?"},
+    {"message": "@Tre_Assistenza @Tre_It Si, vi prego.  nDopo 8 anni con voi mi scoccerebbe cambiare :-("},
+    {"message": "@BonadonnaMarco @Tre_It @Tre_Assistenza io sto aspettando. Max entro oggi, altrimenti chiudo contratti personali e aziendali per sempre."},
+    {"message": "@bagnidalmondo @Tre_It fantastico...@Tre_Assistenza mi hanno chiamato a tel, mi hanno detto che e in via di risoluzione..."},
+    {"message": "@BonadonnaMarco @Tre_It Come non detto!!! Appena controllato, addebiti come i tuoi e ieri non era extrasoglia!! https: / /t.co /RoC5Q5Py4i"},
+    {"message": "@MicK_ele Anche TIM mi ha sempre rimborsato, in varie occasioni. Non ci sono operatori migliori  n@ciaodom @Tre_It @Tre_Assistenza"},
+    {"message": "@Tre_Assistenza @Omiminpo ciao hai avuto riscontro? A me hanno addebitato 54 euro dal 1 Marzo, e naturalmente ancora nulla @Tre_It"},
+    {"message": "@Tre_It ROMA NON FUNZIONA INTERNET MOBILE IN ZONA VIALE EUROPA..."},
+    {"message": "@Pipp61479281 @ciaodom Problema risolto e soldi restituiti. Ve l'avevo detto che 3 e l'operatore migliore :-)  @Tre_It @Tre_Assistenza"},
+    {"message": "@Tre_Assistenza @Tre_It questa risposta va avanti da una settimana"},
+    {"message": "@Tre_It @Tre_Assistenza cosa altro dovrei fare?"},
+    {"message": "@Tre_It @Tre_Assistenza possibile che non vengo degnato di assistenza???Ormai e passata pi  di una settimana ma ancora nulla!"},
+    {"message": "@bagnidalmondo @Tre_It si anche io..ho gia contattato Alternatyva (per la zona di roma) (tariffa mobile, infinito su sim wind a 22 euro /mese"},
+    {"message": "@BonadonnaMarco @Tre_It problema differente. Ma se non risolvo entro oggi stacco il RID e cambio operatore. Basta."},
+    {"message": "@Garolfo consolati non penso @TIM_Official sia peggio di @Tre_It"},
+    {"message": "Auguri (in ritardo) @Tre_It "},
+    {"message": ".@TIM4UGiulia 24 ore senza alcuna risposta? @TIM_Official mai successo in precedenza con @Tre_It e @VodafoneIT! Sono seriamente!"},
+    {"message": "Tra l'altro, non leggendo sms nella sim dentro un cubo... Me ne sono accorto perche ho pagato 5 euro di modifica, sapete cosa fa @Tre_It?"},
+    {"message": "Avvisato con un sms delle modifiche di un contratto, va bene un tweet per la disdetta? @Tre_It"},
+    {"message": "@bagnidalmondo @Tre_It a me tutti addebiti di 0,41 euro con dicitura CU UMTS. Mi hanno preso 50 euro fin'ora...non mi hanno ricontattato."},
+    {"message": "@BonadonnaMarco @Tre_It ho seguito la voce, non ricordo! Ma domani devo riprovare, non sono stata richiamata come promesso"},
+    {"message": "@Tre_It @bagnidalmondo ps. puoi dirmi i numeri per parlare con un operatore chiamando il 133? E' imbarazzante come impediscano di parlare"},
+    {"message": "@Tre_It @bagnidalmondo ciao, hai ancora il problema degli addebiti? Ti hanno fatto sapere qualcosa? Stesso problema."},
+    {"message": "@Tre_It Da 3 giorni vengono addebitati costi extrasoglia ingiustificati. Ancora attendo risposta.Domani blocco carta e passo ad alternatyva."},
+    {"message": "@Tre_It le vostre promozioni per chi passa a 3? Grazie"},
+    {"message": "#adamscandinaviatour  @cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #Stockholm  "},
+    {"message": "@Tre_It Salve, ho un problema: devo avere attivato un abbonamento, anche se non so come... Mondo Giochi Mobile Pay, come lo disattivo?"},
+    {"message": "@Tre_It https: / /t.co /ilYKeNVSCe"},
+    {"message": "Un altro addio ad @Tre_It ...passato con @WindItalia in 24 ore....costo mese 6 euro con #tre almeno 15+IVA+ costo sim"},
+    {"message": "@Tre_It beh... A quanto dicono gli operatori non potevate anticipare il cambio di contratto per un cliente da 7 /8 anni oltre ad altri disagi"},
+    {"message": "@Tre_It Sono interessato all'abbonamento Full 400. I 4GB di Internet sono mensili o vengono suddivisi settimanalmente?"},
+    {"message": "@Tre_It Sono interessato all'abbonamento solo sim Super Internet Plus. Che piano tariffario e compreso per le chiamate e gli sms?"},
+    {"message": "@Tre_It Provincia di Trento, Altopiano della Vigolana, segnale telefonico quasi assente, connessione dati zero, il tutto da domenica..."},
+    {"message": "Ti chiama la @Tre_It per questionario di soddisfazione sul servizio e cade la linea... Si sono risposti da soli! :) #tre"},
+    {"message": "@Tre_It  salve volevo sapere come mai nella metro M5 di Milano non c'e copertura di rete 3 e il telefono mi prende Tim? Sono passati 2 anni"},
+    {"message": "@Tre_It io attendo. Ma alle 9 mi avevano assicurato una telefonata di riscontro entro la mattina e ancora nulla."},
+    {"message": "@Tre_It fatto"},
+    {"message": "@Tre_It grazie"},
+    {"message": "@cxz__ @Tre_It @JustTrai @OuuuuuKa @HoeZaay @Naz_izi #OSLO #AdamScandinaviaTour CHOOSE me"},
+    {"message": "Vorrei tornare a @VodafoneIT o @TIM_Official ma nessuno dei due offre di meglio del piano attuale con @Tre_It #concorrenza"},
+    {"message": "@GBuongiglio @Tre_It pensa che l'ultima settimana di ogni messe nn mi rinnovano i minuti perche mi rubano pochi centesimi... #maipiuh3g"},
+    {"message": "@Tre_It ho appena preso un pocket cube con offerta web nightand day ma ho problemi"},
+    {"message": "@ehiluigi @Tre_It donate una ricarica a questo ragazzo, lo renderete felice, con un lavoro stabile per mantenere la famiglia e mangiare (?)"},
+    {"message": "@Tre_It  Mi disattivate la promozione e magari pretendete anche che io ne attivi una nuova pagando il costo d'attivazione. Cose da pazzi"},
+    {"message": "@Tre_It Grande rete LTE di 3..... https: / /t.co /Plk4nzBHFW"}
+  ]}
+
+    headers = {'content-type': 'application/json'}
+    rv = client.post('/openReq/trainNgram', data=json.dumps(data), headers=headers)
+
+    json_data = json.loads(rv.get_data())
+    assert json_data.keys()==[u'bigram_model_id']
+    assert rv.status_code == 200
+
+def test_trainCodebookClustering(client):
+    data = {  "som_model_id": "1"}
+
+    headers = {'content-type': 'application/json'}
+    rv = client.post('/openReq/trainCodebookClustering', data=json.dumps(data), headers=headers)
+
+    json_data = json.loads(rv.get_data())
+    assert json_data.keys()==[u'codebook_cluster_model_id']
+    assert rv.status_code == 200
 
 if __name__ == "__main__":
     client = app.test_client()
