@@ -463,7 +463,7 @@ def getCodebookActivation():
             consumes:
               - application/json
             produces:
-              - image/png
+              - application/json
             parameters:
               - in: query
                 name: som_model_id
@@ -473,6 +473,11 @@ def getCodebookActivation():
             responses:
               200:
                 description: png of codebook activations
+                schema:
+                    type: object
+                    properties:
+                        pictures:
+                         type: string
               500:
                 description: Internal Server Error
                 schema:
@@ -521,7 +526,7 @@ def getCellFrequencyDistribution():
         consumes:
           - application/json
         produces:
-          - text/html
+          - application/json
         parameters:
           - in: body
             name: body
@@ -555,6 +560,11 @@ def getCellFrequencyDistribution():
         responses:
           200:
             description: graph of frequencies
+            schema:
+                type: object
+                properties:
+                    html:
+                     type: string
           500:
             description: Internal Server Error
             schema:
@@ -624,7 +634,7 @@ def getUmatrix():
             consumes:
               - application/json
             produces:
-              - image/png
+              - application/json
             parameters:
               - in: query
                 name: som_model_id
@@ -634,6 +644,11 @@ def getUmatrix():
             responses:
               200:
                 description: png of Umatrix
+                schema:
+                    type: object
+                    properties:
+                        picture:
+                         type: string
               500:
                 description: Internal Server Error
                 schema:

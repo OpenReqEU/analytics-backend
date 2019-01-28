@@ -10,6 +10,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 ADD . /app
 
+ADD https://raw.githubusercontent.com/stopwords-iso/stopwords-it/master/stopwords-it.txt stopwords-it/
+
 ########################################
 # hdbscan
 ########################################
