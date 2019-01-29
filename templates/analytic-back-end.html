@@ -809,7 +809,7 @@
         $(".loader-training").css("display","block");
         $.ajax({
             type: "POST",
-            url:  host_port+"/openReq/"+service,
+            url:  host_port+"/analytics-backend/"+service,
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(obj),
             success: function (data) {
@@ -882,7 +882,7 @@
 
         $.ajax({
             type: "GET",
-            url:  host_port+"/openReq/getCostOfSom?som_model_id="+som_model_id,
+            url:  host_port+"/analytics-backend/getCostOfSom?som_model_id="+som_model_id,
             contentType: "application/json; charset=utf-8",
             success: function (data) {
                 $("#div-evaluation-model").css("display","block");
@@ -899,7 +899,7 @@
         });
 
         $.ajax({
-            url: host_port+"/openReq/getUmatrix?som_model_id="+som_model_id,
+            url: host_port+"/analytics-backend/getUmatrix?som_model_id="+som_model_id,
             type: "GET",
             mimeType: "text/plain; charset=x-user-defined"
         }).done(function( data, textStatus, jqXHR ) {
@@ -1007,7 +1007,7 @@
         {
             $.ajax({
                 type: "POST",
-                url:  host_port+"/openReq/doSomAndPlot",
+                url:  host_port+"/analytics-backend/doSomAndPlot",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(obj),
                 success: function (data) {
@@ -1097,7 +1097,7 @@
         {
             $.ajax({
                 type: "POST",
-                url:  host_port+"/openReq/computeTopics",
+                url:  host_port+"/analytics-backend/computeTopics",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(obj),
                 success: function (data) {
@@ -1123,7 +1123,7 @@
     function callDried(num, obj){
         $.ajax({
             type: "GET",
-            url: host_port+"/openReq/dried?num_graph="+num,
+            url: host_port+"/analytics-backend/dried?num_graph="+num,
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(obj),
             success: function (data) {
@@ -1204,7 +1204,7 @@
             $(".loader-analysis").css("display","block");
             $.ajax({
                 type: "POST",
-                url: host_port+"/openReq/keywordsExtraction",
+                url: host_port+"/analytics-backend/keywordsExtraction",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(obj),
                 success: function (data) {
@@ -1291,7 +1291,7 @@
             $(".loader-analysis").css("display","block");
             $.ajax({
                 type: "POST",
-                url: host_port+"/openReq/textRanking",
+                url: host_port+"/analytics-backend/textRanking",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(obj),
                 success: function (data) {
@@ -1378,7 +1378,7 @@
 
         $.ajax({
             type: "POST",
-            url: host_port+"/openReq/cleanText",
+            url: host_port+"/analytics-backend/cleanText",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(tweets),
             success: function (data) {

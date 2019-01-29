@@ -513,7 +513,7 @@ $(function () {
                   };
         $.ajax({
             type: "POST",
-            url:  "http://"+host_port+"/openReq/getCellFrequencyDistribution",
+            url:  "http://"+host_port+"/analytics-backend/getCellFrequencyDistribution",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(obj),
             success: function (data) {
@@ -537,7 +537,7 @@ $(function () {
         var obj = tweets;
         $.ajax({
             type: "POST",
-            url:  "http://"+host_port+"/openReq/getFrequencies",
+            url:  "http://"+host_port+"/analytics-backend/getFrequencies",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(obj),
             success: function (data) {
@@ -565,7 +565,7 @@ $(function () {
                     }
         $.ajax({
             type: "POST",
-            url:  "http://"+host_port+"/openReq/computeTopics",
+            url:  "http://"+host_port+"/analytics-backend/computeTopics",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(obj),
             success: function (data) {
@@ -587,21 +587,21 @@ $(function () {
 
 $(function () {
     $("[id*=getCostOfSom]").click(function () {
-        url = "http://"+host_port+"/openReq/getCostOfSom?som_model_id=1";
+        url = "http://"+host_port+"/analytics-backend/getCostOfSom?som_model_id=1";
         window.location.replace(url);
     });
 });
 
 $(function () {
     $("[id*=getUmatrix]").click(function () {
-        url = "http://"+host_port+"/openReq/getUmatrix?som_model_id=1";
+        url = "http://"+host_port+"/analytics-backend/getUmatrix?som_model_id=1";
         window.location.replace(url);
     });
 });
 
 $(function () {
     $("[id*=getCodebookActivation]").click(function () {
-        url = "http://"+host_port+"/openReq/getCodebookActivation?som_model_id=1";
+        url = "http://"+host_port+"/analytics-backend/getCodebookActivation?som_model_id=1";
         window.location.replace(url);
     });
 });
