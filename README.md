@@ -4,15 +4,6 @@
 
 This component was created as a result of the OpenReq project funded by the European Union Horizon 2020 Research and Innovation programme under grant agreement No 732463.
 
-The following technologies are used:
-
-* Flask
-* pandas
-* numpy
-* gensim
-* spaCy
-* nltk
-
 ## Public APIs
 
 The API is documented by using Swagger:
@@ -26,6 +17,15 @@ The microservices are useful to performs a topic extraction of the tweets addres
 It is also exposed a web interface available [here] (http://217.172.12.199:10601/openReq/interactive-visualization/).
 
 [You can use model id 1 to test the API]
+
+The following technologies are used:
+
+* Flask
+* pandas
+* numpy
+* gensim
+* spaCy
+* nltk
 
 ## How to Install
 

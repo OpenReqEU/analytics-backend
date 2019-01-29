@@ -17,7 +17,7 @@ from sklearn.cluster import KMeans
 import pandas as pd
 import seaborn as sns
 from collections import Counter
-
+import numpy.matlib as matlib
 
 
 def DaviesBouldin(X, labels):
@@ -65,7 +65,7 @@ def get_knee(values):
     # We find the vector parallel to the line by projecting vecFromFirst onto the line. The perpendicular vector is vecFromFirst - vecFromFirstParallel
     # We project vecFromFirst by taking the scalar product of the vector with the unit vector that points in the direction of the line (this gives us 
     # the length of the projection of vecFromFirst onto the line). If we multiply the scalar product by the unit vector, we have vecFromFirstParallel
-    scalarProduct = np.sum(vecFromFirst * np.matlib.repmat(lineVecNorm, nPoints, 1), axis=1)
+    scalarProduct = np.sum(vecFromFirst * matlib.repmat(lineVecNorm, nPoints, 1), axis=1)
     vecFromFirstParallel = np.outer(scalarProduct, lineVecNorm)
     vecToLine = vecFromFirst - vecFromFirstParallel
     
