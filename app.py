@@ -13,7 +13,7 @@ Swagger.DEFAULT_CONFIG = {
     "specs": [
         {
             "endpoint": 'apispec_1',
-            "route": '/openReq/apispec_1.json',
+            "route": '/analytics-backend/apispec_1.json',
             "rule_filter": lambda rule: True,  # all in
             "model_filter": lambda tag: True,  # all in
         }
@@ -21,7 +21,7 @@ Swagger.DEFAULT_CONFIG = {
     "static_url_path": "/flasgger_static",
     # "static_folder": "static",  # must be set by user
     "swagger_ui": True,
-    "specs_route": "/openReq/apidocs/"
+    "specs_route": "/analytics-backend/apidocs/"
 }
 
 
@@ -69,7 +69,7 @@ def returnModelStatus(filename, model_id):
     return response
 
 # cleaning
-@app.route("/openReq/cleanText", methods=['POST'])
+@app.route("/analytics-backend/cleanText", methods=['POST'])
 def cleanText():
     """
         Clean text
@@ -102,7 +102,7 @@ def cleanText():
                     error:
                      type: string
     """
-    log.info("/openReq/cleanText")
+    log.info("/analytics-backend/cleanText")
     r = request
     data_json = json.dumps(request.get_json(silent=True))
     input_list = pd.read_json(data_json, encoding='utf8')['message'].tolist()
@@ -112,7 +112,7 @@ def cleanText():
 
 
 # w2v
-@app.route("/openReq/getEmbeddedWords", methods=['POST'])
+@app.route("/analytics-backend/getEmbeddedWords", methods=['POST'])
 def getEmbeddedWords():
     """
         Word embedding
@@ -160,7 +160,7 @@ def getEmbeddedWords():
                     warning:
                      type: string
     """
-    log.info("/openReq/getEmbeddedWords")
+    log.info("/analytics-backend/getEmbeddedWords")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
@@ -183,7 +183,7 @@ def getEmbeddedWords():
 
 
 # som - entities
-@app.route("/openReq/doSomAndPlot", methods=['POST'])
+@app.route("/analytics-backend/doSomAndPlot", methods=['POST'])
 def doSomAndPlot1():
     """
         Get entities: Apply SOM and plot result of codebook MST
@@ -265,7 +265,7 @@ def doSomAndPlot1():
                     warning:
                      type: string
     """
-    log.info("/openReq/doSomAndPlot")
+    log.info("/analytics-backend/doSomAndPlot")
 
     # reading json input
     data_json = json.dumps(request.get_json(silent=True))
@@ -323,7 +323,7 @@ def doSomAndPlot1():
 
 
 # som - topics
-@app.route("/openReq/computeTopics", methods=['POST'])
+@app.route("/analytics-backend/computeTopics", methods=['POST'])
 def computeTopics():
     """
         Extracts topics from a list of tweets
@@ -404,7 +404,7 @@ def computeTopics():
                     warning:
                      type: string
     """
-    log.info("/openReq/computeTopics")
+    log.info("/analytics-backend/computeTopics")
 
     # remove old html topics
     import glob
@@ -454,7 +454,7 @@ def computeTopics():
 
 
 # plot
-@app.route("/openReq/getCodebookActivation")
+@app.route("/analytics-backend/getCodebookActivation")
 def getCodebookActivation():
     """
             Plot result of codebook Activation
@@ -493,7 +493,7 @@ def getCodebookActivation():
                         warning:
                          type: string
     """
-    log.info("/openReq/getCodebookActivation")
+    log.info("/analytics-backend/getCodebookActivation")
     som_model_id = request.args.get('som_model_id')
 
     filename = conf.get('MAIN', 'path_pickle_som_model_incr_fold') + "som_" + str(som_model_id) + ".pickle"
@@ -517,7 +517,7 @@ def getCodebookActivation():
 
 
 # plot
-@app.route("/openReq/getCellFrequencyDistribution", methods=['POST'])
+@app.route("/analytics-backend/getCellFrequencyDistribution", methods=['POST'])
 def getCellFrequencyDistribution():
     """
         Plot frequency distribution
@@ -580,7 +580,7 @@ def getCellFrequencyDistribution():
                     warning:
                      type: string
     """
-    log.info("/openReq/getCellFrequencyDistribution")
+    log.info("/analytics-backend/getCellFrequencyDistribution")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
