@@ -625,7 +625,7 @@ def getCellFrequencyDistribution():
 
 
 # plot
-@app.route("/openReq/getUmatrix")
+@app.route("/analytics-backend/getUmatrix")
 def getUmatrix():
     """
             Plot result of umatrix
@@ -664,7 +664,7 @@ def getUmatrix():
                         warning:
                          type: string
     """
-    log.info("/openReq/getUmatrix")
+    log.info("/analytics-backend/getUmatrix")
     som_model_id = request.args.get('som_model_id')
 
     filename = conf.get('MAIN', 'path_pickle_som_model_incr_fold') + "som_" + str(som_model_id) + ".pickle"
@@ -685,7 +685,7 @@ def getUmatrix():
 
 
 # plot
-@app.route("/openReq/getCostOfSom", methods=['GET'])
+@app.route("/analytics-backend/getCostOfSom", methods=['GET'])
 def getCostOfSom():
     """
             Get cost of Som
@@ -720,7 +720,7 @@ def getCostOfSom():
                         warning:
                          type: string
     """
-    log.info("/openReq/getCostOfSom")
+    log.info("/analytics-backend/getCostOfSom")
     som_model_id = request.args.get('som_model_id')
 
     filename = conf.get('MAIN', 'path_pickle_som_model_incr_fold') + "som_" + str(som_model_id) + ".pickle"
@@ -736,7 +736,7 @@ def getCostOfSom():
     return response
 
 
-@app.route("/openReq/getCodebookWords", methods=['POST'])
+@app.route("/analytics-backend/getCodebookWords", methods=['POST'])
 def getCodebookWords():
     """
         Get all words associated to codebooks
@@ -804,7 +804,7 @@ def getCodebookWords():
                     warning:
                      type: string
     """
-    log.info("/openReq/getCodebookWords")
+    log.info("/analytics-backend/getCodebookWords")
     # reading json input
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
@@ -833,7 +833,7 @@ def getCodebookWords():
     response = jsonify(codebook2words)
     return response
 
-@app.route("/openReq/dried")
+@app.route("/analytics-backend/dried")
 def showTopic():
     # """
     #     Show the graph associated to the topic
@@ -871,7 +871,7 @@ def showTopic():
     return render_template('dried_' + num_graph + '.html')
     return html
 
-@app.route("/openReq/keywordsExtraction", methods=['POST'])
+@app.route("/analytics-backend/keywordsExtraction", methods=['POST'])
 def keywordsExtraction():
     """
         Keywords Extraction
@@ -922,7 +922,7 @@ def keywordsExtraction():
                     warning:
                      type: string
     """
-    log.info("/openReq/keywordsExtraction")
+    log.info("/analytics-backend/keywordsExtraction")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
@@ -958,7 +958,7 @@ def keywordsExtraction():
     response = jsonify(keywds)
     return response
 
-@app.route("/openReq/textRanking", methods=['POST'])
+@app.route("/analytics-backend/textRanking", methods=['POST'])
 def textRanking():
     """
         Text Ranking
@@ -1005,7 +1005,7 @@ def textRanking():
                     error:
                      type: string
     """
-    log.info("/openReq/textRanking")
+    log.info("/analytics-backend/textRanking")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
@@ -1049,7 +1049,7 @@ def textRanking():
     return response
 
 # w2v
-@app.route("/openReq/trainWord2Vec", methods=['POST'])
+@app.route("/analytics-backend/trainWord2Vec", methods=['POST'])
 def trainWord2Vec():
     """
         Train word 2 vec model
@@ -1089,7 +1089,7 @@ def trainWord2Vec():
                     error:
                      type: string
     """
-    log.info("/openReq/trainWord2Vec")
+    log.info("/analytics-backend/trainWord2Vec")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
@@ -1119,7 +1119,7 @@ def trainWord2Vec():
     return response
 
 # train som
-@app.route("/openReq/trainSom", methods=['POST'])
+@app.route("/analytics-backend/trainSom", methods=['POST'])
 def trainSom():
     """
         Train Self Organizing Map
@@ -1158,7 +1158,7 @@ def trainSom():
                     warning:
                      type: string
     """
-    log.info("/openReq/trainSom")
+    log.info("/analytics-backend/trainSom")
 
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
@@ -1179,7 +1179,7 @@ def trainSom():
     response = jsonify({"som_model_id": identifier})
     return response
 
-@app.route("/openReq/trainNgram", methods=['POST'])
+@app.route("/analytics-backend/trainNgram", methods=['POST'])
 def trainNgram():
     """
             Train bigram model
@@ -1219,7 +1219,7 @@ def trainNgram():
                         error:
                          type: string
     """
-    log.info("/openReq/trainNgram")
+    log.info("/analytics-backend/trainNgram")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
@@ -1245,7 +1245,7 @@ def trainNgram():
     response = jsonify({"bigram_model_id": identifier})
     return response
 
-@app.route("/openReq/trainCodebookClustering", methods=['POST'])
+@app.route("/analytics-backend/trainCodebookClustering", methods=['POST'])
 def trainCodebookClustering():
     """
             Train model Codebook Clustering
@@ -1284,7 +1284,7 @@ def trainCodebookClustering():
                         warning:
                          type: string
     """
-    log.info("/openReq/trainCodebookClustering")
+    log.info("/analytics-backend/trainCodebookClustering")
     data_json = json.dumps(request.get_json(silent=True))
     data_json = json.loads(data_json)
 
@@ -1307,7 +1307,7 @@ def hello():
     return render_template('hello.html')
     return html
 
-@app.route("/openReq/interactive-visualization/")
+@app.route("/analytics-backend/interactive-visualization/")
 def analyticBackEnd():
     return render_template('analytic-back-end.html')
     return html
