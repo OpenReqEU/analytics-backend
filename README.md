@@ -33,9 +33,25 @@ This microservice is Dockerized. With Docker installed on your machine, download
 
 In order to make the component working download the file [stopwords-it.txt] (https://raw.githubusercontent.com/stopwords-iso/stopwords-it/master/stopwords-it.txt) and copy it into the folder stopwords-it
 
+### Build docker openreq
+
+Go inside the main folder and generate the openreq container via sudo "docker build . -t analytic-backend."
+
 ## How to Use
 
-Call the services exposed to make text mining on the tweets, such as clean text of tweets, extract topics and graph analysis, extract keywords, apply word embedding, evaluate the SOM model.
+Call the services exposed to make text mining on the tweets, such as clean text of tweets, extract topics and graph analysis, extract keywords, apply word embedding, evaluate the SOM model:
+
+- cleanText: get a list of tweet message, return a list of cleaned messages
+- getEmbeddedWords: Get a the id of word2vec model the list of tweet messages and return a list of vector
+- doSomAndPlot: Apply SOM and plot result of codebook MST
+- computeTopics: Extracts topics from a list of tweets
+- getCodebookActivation: Plot result of codebook Activation
+- getUmatrix: Plot result of umatrix
+- getCostOfSom: Get cost of Som
+- keywordsExtraction: Keywords Extraction
+- textRanking: Text Ranking
+
+Here you can find the [Swagger documentation](https://api.openreq.eu/#/services/analytics-backend)
 
 ## Notes for developers
 
