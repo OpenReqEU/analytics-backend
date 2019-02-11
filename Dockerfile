@@ -23,7 +23,7 @@ RUN pip install hdbscan==0.8.12
 RUN pip install spacy==2.0.11
 RUN pip install scikit-learn==0.19.1
 RUN python -m spacy download ${LANG}
-RUN python -m spacy download en_core_web_sm
+RUN python -m spacy download en
 
 # Install any needed packages specified in requirements.txt
 RUN pip2 install --trusted-host pypi.python.org -r requirements.txt

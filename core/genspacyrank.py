@@ -50,7 +50,7 @@ def spacy_analysis ( text, lang, rm_stopwords=False, selected_pos= ['V', 'N', 'J
     try:
         spacy_nlp = spacy.load(lang)
     except IOError as e:
-        spacy_nlp = spacy.load('en_core_web_sm')
+        spacy_nlp = spacy.load('en')
         if DEBUG:
             print("Download using bash command: python -m spacy download '"+lang+"'")
             
@@ -467,7 +467,7 @@ if __name__ == "__main__":
         supporting set of solutions can be used in solving all the considered types of systems 
         and systems of mixed types."""]
     
-    lang = 'en_core_web_sm'
+    lang = 'en'
     # for debugging
     markup = spacy_analysis ( text=mytext, lang=lang, rm_stopwords=False, selected_pos= ['V', 'N', 'J'])
     
