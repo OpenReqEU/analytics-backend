@@ -37,6 +37,9 @@ In order to make the component working download the file [stopwords-it.txt] (htt
 
 Go inside the main folder and generate the openreq container via sudo "docker build . -t analytic-backend."
 
+### Run docker openreq
+Go inside the main folder and run the openreq container via "docker run -d -p 10601:10601 analytics-backend"
+
 ## How to Use
 
 Call the services exposed to make text mining on the tweets, such as clean text of tweets, extract topics and graph analysis, extract keywords, apply word embedding, evaluate the SOM model:
