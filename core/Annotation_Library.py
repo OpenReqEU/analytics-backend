@@ -24,16 +24,14 @@ import os
 baseAdress = "http://193.109.207.65:15024/nlp/"  # DEPLOYED MN01 APP
 
 def annotateSentence(text, language="en", confidence=0.25):
-    my_data = {'document': text, 'confidence': confidence}
-#    content, _  = tester_app(endpoint='keywords/supervised', baseAdress=baseAdress, reqType='POST', data=my_data, proxies=None)
-
-    req = requests.post(os.path.join(baseAdress, 'keywords/supervised'), json.dumps(my_data), None)
-
     out_uri = []
     out_entities = []
     out_text = ""
-
     try:
+        my_data = {'document': text, 'confidence': confidence}
+
+        req = requests.post(os.path.join(baseAdress, 'keywords/supervised'), json.dumps(my_data), None)
+
         resp = req.json()
 
         if not req.ok:
