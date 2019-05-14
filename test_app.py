@@ -1489,7 +1489,7 @@ def test_computeTopics(client):
         "som_model_id":1,
         "codebook_cluster_model_id":1,
          "tweets":[
- 	        {"message":"Posso essere chiamato da un operatore 3"},
+            {"message":"Posso essere chiamato da un operatore 3"},
             {"message":"@Tre_It grazie al #3store di #Arona per il supporto durante il #blackout. Unici ad avere notizie certe. call center da bocciare"},
             {"message":"@Tre_It da un paio di settimane nella metro A di Roma, nonostante ci sia copertura, internet non funziona o, se funziona, e lentissimo."},
             {"message":"@Tre_It strani addebiti da euro 0,41"},
@@ -2111,7 +2111,7 @@ def test_getCellFrequencyDistribution(client):
           "type_chart": "bar",
           "w2v_model_id": "1",
           "tweets":[
- 	        {"message":"Posso essere chiamato da un operatore 3"},
+            {"message":"Posso essere chiamato da un operatore 3"},
             {"message":"@Tre_It grazie al #3store di #Arona per il supporto durante il #blackout. Unici ad avere notizie certe. call center da bocciare"},
             {"message":"@Tre_It da un paio di settimane nella metro A di Roma, nonostante ci sia copertura, internet non funziona o, se funziona, e lentissimo."},
             {"message":"@Tre_It strani addebiti da euro 0,41"},
@@ -2656,6 +2656,22 @@ def test_trainCodebookClustering(client):
     assert json_data.keys()==[u'codebook_cluster_model_id']
     assert rv.status_code == 200
 
+    
+def test_tweetClassification():
+    data = {'message' : 'Sono 48 #ore senza #internet  e #telefono #3settembre grazie @TIM_Official forse domani '
+                   'quindi saranno almeno 3 giorni. #bravi #sappiatelo il guasto dipende da voi'}
+                   
+    headers = {'content-type': 'application/json'}
+    rv = client.post('/openReq/tweetClassification', data = json.dumps(data), headers=headers)
+    json_data = json.loads(rv.get_data())
+    
+    result_data={'first_class': {'score':0.813, 'label':'Problemi di Rete'}, 
+                'second_class':{'score':0.7702, 'label':'Problemi'}}
+    
+    assert (json_data == result_data) and  (rv.status_code == 200)
+    
+    
+    
 if __name__ == "__main__":
     client = app.test_client()
     test_getCellFrequencyDistribution(client)

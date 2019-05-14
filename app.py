@@ -36,13 +36,23 @@ from flask import render_template
 import core.utility.utilities as utilities
 import core.configurations
 import core.utility.logger as logger
-from core import TopicLabeler
+from core import TopicLabeler, TextCleaner, genspacyrank
 
 conf = core.configurations.get_conf()
 
 from core.micro_services import clean_text_ms, som_ms, word2vec_ms, text_ranking_ms
 import core.topics as Topics
 import core.corpus as Corpus
+
+from core.docs_similarity import extract_text_rank, docs_similarity
+from gensim.models import Word2Vec
+
+# load class definition for tweet classification
+file_definition = conf.get('MAIN', 'class_definition')
+class_definition = json.load(open(file_definition))
+# load word2vec for tweet classification
+filename_w2v = conf.get('MAIN', 'path_word2vec_model_classification')
+model_w2v = Word2Vec.load(filename_w2v)
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -1311,6 +1321,83 @@ def hello():
 def analyticBackEnd():
     return render_template('analytic-back-end.html')
     return html
+
+
+@app.route("/analytics-backend/tweetClassification", methods=['POST'])
+def tweetClassification():
+    """
+        Tweet classification
+        Get a tweet message as input, return the list of the first two most likely classes and the corresponding score
+        ---
+        parameters:
+          - in: body
+            name: body
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: tweet message
+            required: true      
+        responses:  
+          200:
+            description: predicted classes
+            type: object
+            properties:
+              first_class:
+                type: object
+                description: first predicted class
+                properties:
+                  label:
+                    type: string
+                    description: label of the predicted class
+                  score:
+                    type: number
+                    description: score of the predicted class   
+              second_class:
+                type: object
+                description: second predicted class
+                properties:
+                  label:
+                    type: string
+                    description: label of the predicted class
+                  score:
+                    type: number
+                    description: score of the predicted class                   
+          500:
+            description: Internal Server Error
+            schema:
+                type: object
+                properties:
+                    error:
+                     type: string   
+    """
+    log.info("/analytics-backend/tweetClassification")
+    data_json = json.dumps(request.get_json(silent=True))
+    data_json = json.loads(data_json)
+    text = data_json['message']
+
+    # keyword extraction
+    keywds = extract_text_rank(text)
+
+    # compute distances
+    ordered_keys = sorted(list(class_definition.keys()))
+    distance = pd.DataFrame([],columns=['class','distance'])
+    for _key in ordered_keys:
+        cos_sim = docs_similarity(doc1=keywds, doc2=class_definition[_key], w2v_model=model_w2v, split=False,
+                                   metrics='cosine')
+        new_dis = pd.DataFrame([[_key,cos_sim]],columns=['class','distance'])
+        distance = pd.concat([distance,new_dis],ignore_index = True)
+
+    # choose class
+    distance.index = distance['class']
+    predicted_classes = distance['distance'].sort_values(ascending=False)[:2].index.to_list()
+    scores = list(distance['distance'].sort_values(ascending=False)[:2].values)
+
+    return jsonify({'first_class' : {'label': predicted_classes[0], 'score': round(scores[0],4)},
+                    'second_class' : {'label': predicted_classes[1], 'score': round(scores[1],4)}})
+
+
 
 
 if __name__ == "__main__":
