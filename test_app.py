@@ -2665,8 +2665,8 @@ def test_tweetClassification():
     rv = client.post('/openReq/tweetClassification', data = json.dumps(data), headers=headers)
     json_data = json.loads(rv.get_data())
     
-    result_data={'first_class': {'score':0.813, 'label':'Problemi di Rete'}, 
-                'second_class':{'score':0.7702, 'label':'Problemi'}}
+    result_data={'first_class': {'score':0.6431, 'label':'Problemi di Rete'}, 
+                'second_class':{'score':0.1248, 'label':'Offerta'}}
     
     assert (json_data == result_data) and  (rv.status_code == 200)
     

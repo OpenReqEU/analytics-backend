@@ -9,6 +9,7 @@ import re
 
 from core.TextCleaner import TextCleaner
 from  core import genspacyrank
+import pandas as pd
 
 
 def extract_text_rank(text):
@@ -60,7 +61,47 @@ def docs_similarity(doc1, doc2, w2v_model, split=False, metrics='cosine'):
     else:
         return w2v_model.wv.n_similarity(ws1=doc1, ws2=doc2)
 
+        
+def classify_tweet(text,class_definition,model_w2v,model_xgb):
+    '''
+    This function extracts the keywords from the text, computes the similarity between the text and each class definition, 
+    and returns the first two most likely classes, with corresponding score.  
+    
+    Args
+        'text' (string): text of a tweet
+        'class_definition' (dict): dictionary of the keywords that define each class
+        'model_w2v' (pickle): word2vec pre-trained model
+        'model_xgb' (pickle): xgboost pre-trained model
+    Returns:
+        'predicted_classes' (list): list of the first two most likely classes 
+        'scores' (list): list of the scrores of the first two most likely classes 
+    '''    
+    # keyword extraction
+    keywds = extract_text_rank(text)
 
+    # compute distances
+    ordered_keys = sorted(list(class_definition.keys()))
+    distance = pd.DataFrame([],columns=['class','distance'])
+    for _key in ordered_keys:
+        cos_sim = docs_similarity(doc1=keywds, doc2=class_definition[_key], w2v_model=model_w2v, split=False,
+                                   metrics='cosine')
+        new_dis = pd.DataFrame([[_key,cos_sim]],columns=['class','distance'])
+        distance = pd.concat([distance,new_dis],ignore_index = True)
+
+    # predict class with xgboost
+    distance.index = distance['class']
+    df_row = distance.drop('class',axis=1).T
+    predictions = model_xgb.predict_proba(df_row.values)
+    df_predictions = pd.DataFrame(predictions,columns=['Churn', 'Fatturazione', 'Offerta', 'Problemi', 'Problemi di Rete'])
+    
+    predicted_classes = []
+    scores = []
+    for i in [0,1]:
+        predicted_classes.append(df_predictions.apply(lambda x: x.sort_values(ascending=False)[:2].index[i],axis=1)[0])
+        scores.append(df_predictions.apply(lambda x: x.sort_values(ascending=False)[:2][i],axis=1)[0])
+    
+    return predicted_classes, scores
+    
     
 if __name__ == "__main__":  
     

@@ -44,8 +44,10 @@ from core.micro_services import clean_text_ms, som_ms, word2vec_ms, text_ranking
 import core.topics as Topics
 import core.corpus as Corpus
 
-from core.docs_similarity import extract_text_rank, docs_similarity
+from core.docs_similarity import classify_tweet
 from gensim.models import Word2Vec
+import xgboost as xgb
+import pickle
 
 # load class definition for tweet classification
 file_definition = conf.get('MAIN', 'class_definition')
@@ -53,6 +55,11 @@ class_definition = json.load(open(file_definition))
 # load word2vec for tweet classification
 filename_w2v = conf.get('MAIN', 'path_word2vec_model_classification')
 model_w2v = Word2Vec.load(filename_w2v)
+# load xgboost for tweet classification
+filename_xgb = conf.get('MAIN', 'path_xgboost_model')
+with open(filename_xgb,'rb') as f:
+    model_xgb = pickle.load(f)
+
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -1377,22 +1384,7 @@ def tweetClassification():
     data_json = json.loads(data_json)
     text = data_json['message']
 
-    # keyword extraction
-    keywds = extract_text_rank(text)
-
-    # compute distances
-    ordered_keys = sorted(list(class_definition.keys()))
-    distance = pd.DataFrame([],columns=['class','distance'])
-    for _key in ordered_keys:
-        cos_sim = docs_similarity(doc1=keywds, doc2=class_definition[_key], w2v_model=model_w2v, split=False,
-                                   metrics='cosine')
-        new_dis = pd.DataFrame([[_key,cos_sim]],columns=['class','distance'])
-        distance = pd.concat([distance,new_dis],ignore_index = True)
-
-    # choose class
-    distance.index = distance['class']
-    predicted_classes = distance['distance'].sort_values(ascending=False)[:2].index.to_list()
-    scores = list(distance['distance'].sort_values(ascending=False)[:2].values)
+    predicted_classes, scores = classify_tweet(text,class_definition,model_w2v,model_xgb)
 
     return jsonify({'first_class' : {'label': predicted_classes[0], 'score': round(scores[0],4)},
                     'second_class' : {'label': predicted_classes[1], 'score': round(scores[1],4)}})

@@ -11,3 +11,4 @@ nltk
 flasgger
 seaborn
 wikipedia
+xgboost
