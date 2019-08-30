@@ -40,20 +40,14 @@ DEBUG = False
 ParsedGraf = namedtuple('ParsedGraf', 'graf_id, graf')
 WordNode = namedtuple('WordNode', 'idx, raw, root, pos, dep, keep, word_id ')
 RankedLexeme = namedtuple('RankedLexeme', 'text, rank, ids, pos, count')
-
+spacy_nlp = spacy.load(os.environ['LANG'])
 
 def spacy_analysis ( text, lang, rm_stopwords=False, selected_pos= ['V', 'N', 'J']):
     """
         tags, pos and lemmas extraction using spacy
     """
     text = unicode(text)
-    try:
-        spacy_nlp = spacy.load(lang)
-    except IOError as e:
-        spacy_nlp = spacy.load('en')
-        if DEBUG:
-            print("Download using bash command: python -m spacy download '"+lang+"'")
-            
+    
     doc = spacy_nlp(text)
     
     markup = []
